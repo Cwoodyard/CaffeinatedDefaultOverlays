@@ -1,0 +1,21 @@
+{
+    "supported": [
+        "0.5.0-pre*",
+        "0.5.0-release"
+    ],
+    "unsupported": [],
+    "version": "0.5.0",
+    "name": "Caffeinated 0.5 Repo",
+    "overlays": [
+        "rotatormodule.js"
+    ],
+    "preload": [
+        "https://caffeinated.casterlabs.co/"
+    ],
+    "required": [
+        {
+            "namespace": "casterlabs_rotator",
+            "id": "text_rotator"
+        }
+    ]
+}
