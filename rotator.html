@@ -121,11 +121,11 @@
                         document.getElementById("icon").style.color = rotation.background_color;
                         document.getElementById("icon").style.transform = "";
 
-                        document.body.classList = config.animation.toLowerCase();
+                        document.body.classList = config.theme.toLowerCase();
                         document.getElementById("accent").style.backgroundColor = rotation.accent_color;
                         document.getElementById("div").style.backgroundColor = rotation.background_color;
 
-                        switch (config.animation) {
+                        switch (config.theme) {
                             case "Bubbly": {
                                 await animateBubbly(rotation, delay);
                             }
@@ -143,7 +143,7 @@
                     targets: "#div",
                     easing: "linear",
                     opacity: 1,
-                    duration: 500
+                    duration: 100
                 });
 
                 anime({
@@ -151,7 +151,7 @@
                     easing: "linear",
                     opacity: 1,
                     duration: 500,
-                    translateY: 10
+                    translateX: [600, 10],
                 });
 
                 anime({
@@ -159,7 +159,7 @@
                     easing: "linear",
                     opacity: 1,
                     duration: 500,
-                    translateY: 10
+                    translateX: [600, 10],
                 });
 
                 anime({
@@ -167,7 +167,8 @@
                     easing: "linear",
                     opacity: 1,
                     duration: 500,
-                    translateY: -10
+                    translateX: [400, 10],
+                    translateY: -20
                 });
 
                 await sleep(delay);
