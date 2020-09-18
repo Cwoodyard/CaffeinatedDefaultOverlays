@@ -144,7 +144,7 @@ const CAFFEINE = {
     },
 
     updateViewerCount() {
-        STREAM_INTEGRATION.viewerCount = this.anonymousCount + STREAM_INTEGRATION.viewerCount;
+        STREAM_INTEGRATION.viewerCount = this.anonymousCount + STREAM_INTEGRATION.viewers.length;
         STREAM_INTEGRATION.broadcast("viewcount", STREAM_INTEGRATION.viewerCount);
     },
 
