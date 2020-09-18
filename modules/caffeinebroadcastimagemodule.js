@@ -1,8 +1,8 @@
 
-MODULES.moduleClasses["casterlabs_broadcast_image"] = class {
+MODULES.moduleClasses["caffeine_broadcast_image"] = class {
 
     constructor(id) {
-        this.namespace = "casterlabs_broadcast_image";
+        this.namespace = "caffeine_broadcast_image";
         this.type = "settings";
         this.id = id;
 
@@ -38,6 +38,19 @@ MODULES.moduleClasses["casterlabs_broadcast_image"] = class {
                 });
             }
         };
+    }
+
+    init() {
+        const div = document.getElementById(this.namespace + "_" + this.id);
+
+        STREAM_INTEGRATION.addEventListener("platform", (platform) => {
+            // Hide the Caffeine stream box if not on caffeine
+            if (platform == "CAFFEINE") {
+                div.classList.remove("hide");
+            } else {
+                div.classList.add("hide");
+            }
+        });
     }
 
     settingsDisplay = {

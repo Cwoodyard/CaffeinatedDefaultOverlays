@@ -24,14 +24,6 @@ MODULES.moduleClasses["casterlabs_credits"] = class {
             </p>
             <br />
             <div id="supporters"></div>
-            <div style="position: absolute; bottom: 0;">
-                <span>
-                    Icons from 
-                    <a onclick="openLink('https://ionicons.com/')">
-                        <ion-icon name="logo-ionic" title="Ionicons"></ion-icon>
-                    </a>
-                </span>
-            </div>
         `;
 
         setInterval(this.update, 15000); // Every 15s

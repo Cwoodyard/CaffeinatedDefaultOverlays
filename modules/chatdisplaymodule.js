@@ -26,28 +26,46 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
             instance.util.addStatus(event.follower.username, event.follower.image_link, event.follower.color, "follow");
         });
 
-        CAFFEINE.addEventListener("join", (event) => {
+        STREAM_INTEGRATION.addEventListener("join", (event) => {
             instance.util.addStatus(event.user, event.image, event.color, "join");
         });
 
-        CAFFEINE.addEventListener("leave", (event) => {
+        STREAM_INTEGRATION.addEventListener("leave", (event) => {
             instance.util.addStatus(event.user, event.image, event.color, "leave");
         });
 
-        CAFFEINE.addEventListener("viewcount", (count) => {
-            instance.util.updateViewerCount(count);
+        STREAM_INTEGRATION.addEventListener("viewcount", (count) => {
+            if (instance.util.window != null) {
+                instance.util.window.webContents.executeJavaScript("setViewerCount(" + count + ");");
+            }
+        });
+
+        STREAM_INTEGRATION.addEventListener("viewers", (viewers) => {
+            if (instance.util.window != null) {
+                instance.util.window.webContents.executeJavaScript("setViewers(" + JSON.stringify(viewers) + ");");
+            }
         });
 
     }
 
     init() {
         this.page.innerHTML = `
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@550&display=swap" rel="stylesheet" />
         <style>
-            #vcclear {
-                position: absolute;
-                right: 15px;
-                top: 0px;
+            .buttons {
+                position: fixed;
+                right: 10px;
+                bottom: 5px;
+                z-index: 1000;
+            }
+
+            .buttons button {
+                height: 30px;
+                font-size: 15px;
+                padding-top: 0;
+                padding-bottom: calc(.2em - 1px);
+                -webkit-app-region: no-drag;
+                display: block;
             }
             
             .vcviewicon {
@@ -95,21 +113,29 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
             .vcimage {
                 border-radius: 50%;
                 object-fit: cover;
-                max-height: 22px;
-                max-width: 22px;
-                padding-right: 5px;
+                height: 22px;
+                width: 22px;
+                margin-right: 5px;
                 vertical-align: bottom;
-                padding-bottom: 2px;
+            }
+
+            .verticalchatmodule {
+                margin-bottom: 35px;
+                overflow-x: wrap;
             }
         </style>
         <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
         <div class="container verticalchatmodule">
             <div id="chatbox"></div>
-            <button class="button" id="vcclear">
-                Clear
-            </button>
-            <ion-icon class="vcviewicon" name="eye"></ion-icon>
-            <span id="vcviewers"></span>
+            <div class="buttons">
+                <button class="button" id="vcclear">
+                    Clear
+                </button>
+                <br />
+                <button class="button" id="vcopen">
+                    Viewers
+                </button>
+            </div>
         </div>
         `;
 
@@ -126,11 +152,56 @@ class VerticalChatUtil {
         this.module.page.querySelector("#vcclear").addEventListener("click", () => {
             module.page.querySelector("#chatbox").innerHTML = "";
         });
+
+        this.module.page.querySelector("#vcopen").addEventListener("click", () => {
+            this.createWindow();
+        });
+
+        require("electron").remote.getCurrentWindow().on("close", () => {
+            if (this.window != null) {
+                this.window.close();
+            }
+        });
+
+        window.addEventListener("beforeunload", () => {
+            if (this.window != null) {
+                this.window.close();
+            }
+        });
+
     }
 
-    updateViewerCount(count) {
-        this.module.page.querySelector("#vcviewers").innerText = count;
+    createWindow() {
+        if (this.window == null) {
+            this.window = new BrowserWindow({
+                width: 200,
+                height: 400,
+                resizable: true,
+                transparent: false,
+                show: false,
+                titleBarStyle: "shown",
+                icon: __dirname + "/media/app_icon.png",
+                frame: false,
+                webPreferences: {
+                    nodeIntegration: true
+                }
+            });
+
+            this.window.once("close", () => {
+                this.window = null;
+            });
+
+            this.window.once("ready-to-show", () => {
+                this.window.show();
+
+                this.window.webContents.executeJavaScript("setViewerCount(" + STREAM_INTEGRATION.viewerCount + ");");
+                this.window.webContents.executeJavaScript("setViewers(" + JSON.stringify(Object.values(STREAM_INTEGRATION.viewers)) + ");");
+            });
+
+            this.window.loadURL("https://caffeinated.casterlabs.co/modules/chatviewers.html");
+        }
     }
+
 
     addMessage(sender, profilePic, color, message, id, imageLink) {
         let div = document.createElement("div");
@@ -203,7 +274,7 @@ class VerticalChatUtil {
     }
 
     isAtBottom() {
-        return (this.module.page.parentNode.scrollHeight - this.module.page.parentNode.scrollTop) < 500;
+        return (this.module.page.parentNode.scrollHeight - this.module.page.parentNode.scrollTop) < 750;
     }
 
     jumpBottom() {

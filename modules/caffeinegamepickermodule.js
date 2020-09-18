@@ -11,10 +11,10 @@ let CAFFEINE_GAMES = {};
     });
 })();
 
-MODULES.moduleClasses["casterlabs_game_picker"] = class {
+MODULES.moduleClasses["caffeine_game_picker"] = class {
 
     constructor(id) {
-        this.namespace = "casterlabs_game_picker";
+        this.namespace = "caffeine_game_picker";
         this.type = "settings";
         this.id = id;
 
@@ -54,6 +54,19 @@ MODULES.moduleClasses["casterlabs_game_picker"] = class {
                 instance.schedule = setInterval(task, (15 * 60) * 1000);
             });
         };
+    }
+
+    init() {
+        const div = document.getElementById(this.namespace + "_" + this.id);
+
+        STREAM_INTEGRATION.addEventListener("platform", (platform) => {
+            // Hide the Caffeine stream box if not on caffeine
+            if (platform == "CAFFEINE") {
+                div.classList.remove("hide");
+            } else {
+                div.classList.add("hide");
+            }
+        });
     }
 
     settingsDisplay = {

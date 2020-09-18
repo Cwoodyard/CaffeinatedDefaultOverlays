@@ -43,7 +43,7 @@ MODULES.moduleClasses["casterlabs_info"] = class {
         this.event = this.settings.event;
 
         if (this.id.includes("view")) {
-            CAFFEINE.addEventListener("viewcount", (count) => {
+            STREAM_INTEGRATION.addEventListener("viewcount", (count) => {
                 instance.event = {
                     viewcount: count
                 };
