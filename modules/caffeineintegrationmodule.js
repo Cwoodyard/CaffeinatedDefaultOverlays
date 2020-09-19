@@ -13,6 +13,7 @@ const CAFFEINE = {
     loggedIn: false,
     viewerIds: [],
     knownViewers: [],
+    anonymousCount: 0,
 
     /*login(username, password, mfa) {
         const instance = this;
@@ -144,7 +145,7 @@ const CAFFEINE = {
     },
 
     updateViewerCount() {
-        STREAM_INTEGRATION.viewerCount = this.anonymousCount + STREAM_INTEGRATION.viewers.length;
+        STREAM_INTEGRATION.viewerCount = this.anonymousCount + Object.values(STREAM_INTEGRATION.viewers).length;
         STREAM_INTEGRATION.broadcast("viewcount", STREAM_INTEGRATION.viewerCount);
     },
 

@@ -15,59 +15,26 @@
     </head>
 
     <body>
-        <span id="user"></span>
-        <span id="amount"></span>
+        <span id="text"></span>
     </body>
 
     <footer>
         <script>
             const overlay = new OverlayUtil("casterlabs_info");
-            const formatter = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-                minimumFractionDigits: 2
-            });
             let config = null;
-
-            function formatUSD(amount) {
-                let formatted = formatter.format(amount);
-
-                return formatted.replace(".00", ""); // "Round" to the dollar.
-            }
 
             overlay.on("config", (data) => {
                 config = data;
 
                 overlay.changeFont(config.font);
 
-                document.querySelector("#user").style = "color: " + config.text_color + "; font-size: " + config.font_size + "px;";
-                document.querySelector("#amount").style = "color: " + config.text_color + "; font-size: " + config.font_size + "px;";
+                document.querySelector("#text").style = "color: " + config.text_color + "; font-size: " + config.font_size + "px;";
             });
 
-            overlay.on("event", (event) => {
+            overlay.on("event", (text) => {
                 if (config) {
-                    let amount = document.querySelector("#amount");
-                    let user = document.querySelector("#user");
-
-                    user.innerText = "";
-                    amount.innerText = "";
-
-                    if (event) {
-                        if (event.hasOwnProperty("viewcount")) {
-                            user.innerText = event.viewcount;
-                        } else if (event.hasOwnProperty("follower")) {
-                            user.innerText = event.follower.username;
-                            amount.innerText = "";
-                        } else {
-                            user.innerText = event.sender.username;
-
-                            if (config.currency == "USD") {
-                                amount.innerText = formatUSD(event.usd_equivalent);
-                            } else {
-                                amount.innerText = event.formatted;
-                            }
-                        }
-                    }
+                    console.log(text)
+                    document.querySelector("#text").innerText = text;
                 }
             });
 
