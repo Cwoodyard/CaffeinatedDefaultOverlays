@@ -26,6 +26,10 @@
                 position: absolute;
             }
 
+            #slider {
+                position: absolute;
+            }
+
             #accent {
                 height: 100%;
             }
@@ -40,19 +44,26 @@
             .bubbly #icon {
                 font-size: 8vw;
                 left: 4vw;
-                top: calc(5vw + 10px);
+                top: calc(5vw - 2px);
             }
 
             .bubbly #text {
                 font-size: 6vw;
                 left: 21vw;
-                top: calc(7vw - 10px);
+                top: calc(7vw - 2px);
             }
 
             .bubbly #title {
                 font-size: 4vw;
                 left: 21vw;
-                top: calc(3vw - 10px);
+                top: calc(3vw);
+            }
+
+            .bubbly #slider {
+                width: 84.65vw;
+                height: 16.8vw;
+                border-radius: 10px;
+                top: calc(.6vw);
             }
 
             .bubbly #div {
@@ -79,6 +90,7 @@
     </head>
 
     <body>
+        <div id="slider" style="opacity: 1"></div>
         <div id="div" style="opacity: 0;">
             <span id="title">DROP A FOLLOW</span>
             <span id="text">CASTERLABS</span>
@@ -123,7 +135,8 @@
 
                         document.body.classList = config.theme.toLowerCase();
                         document.getElementById("accent").style.backgroundColor = rotation.accent_color;
-                        document.getElementById("div").style.backgroundColor = rotation.background_color;
+                        document.getElementById("slider").style.backgroundColor = rotation.background_color;
+                        //document.getElementById("div").style.backgroundColor = rotation.background_color;
 
                         switch (config.theme) {
                             case "Bubbly": {
@@ -143,32 +156,40 @@
                     targets: "#div",
                     easing: "linear",
                     opacity: 1,
-                    duration: 100
+                    duration: 100,
+                });
+
+                anime({
+                    targets: "#slider",
+                    easing: "linear",
+                    opacity: 1,
+                    duration: 350,
+                    translateX: [700, 73],
                 });
 
                 anime({
                     targets: "#text",
                     easing: "linear",
                     opacity: 1,
-                    duration: 500,
-                    translateX: [600, 10],
+                    duration: 300,
+                    translateX: [200, 10],
                 });
 
                 anime({
                     targets: "#title",
                     easing: "linear",
                     opacity: 1,
-                    duration: 500,
-                    translateX: [600, 10],
+                    duration: 300,
+                    translateX: [200, 10],
                 });
 
                 anime({
                     targets: "#icon",
                     easing: "linear",
+                    delay: 100,
                     opacity: 1,
-                    duration: 500,
-                    translateX: [400, 10],
-                    translateY: -20
+                    duration: 200,
+                    translateX: [50, 10],
                 });
 
                 await sleep(delay);
@@ -176,7 +197,7 @@
                 anime({
                     targets: "#div",
                     easing: "linear",
-                    opacity: 0,
+                    opacity: 100,
                     duration: 500
                 });
             }
