@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" />
+        <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
+        <!-- https://tobiasahlin.com/spinkit/ -->
+        <style>
+            .spinner {
+                margin: 100px auto 0;
+                width: 70px;
+                text-align: center;
+            }
+
+            .spinner>div {
+                width: 18px;
+                height: 18px;
+                background-color: #333;
+
+                border-radius: 100%;
+                display: inline-block;
+                -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+                animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+            }
+
+            .spinner .bounce1 {
+                -webkit-animation-delay: -0.32s;
+                animation-delay: -0.32s;
+            }
+
+            .spinner .bounce2 {
+                -webkit-animation-delay: -0.16s;
+                animation-delay: -0.16s;
+            }
+
+            @-webkit-keyframes sk-bouncedelay {
+
+                0%,
+                80%,
+                100% {
+                    -webkit-transform: scale(0)
+                }
+
+                40% {
+                    -webkit-transform: scale(1.0)
+                }
+            }
+
+            @keyframes sk-bouncedelay {
+
+                0%,
+                80%,
+                100% {
+                    -webkit-transform: scale(0);
+                    transform: scale(0);
+                }
+
+                40% {
+                    -webkit-transform: scale(1.0);
+                    transform: scale(1.0);
+                }
+            }
+        </style>
+        <style>
+            html {
+                font-family: "Roboto", sans-serif;
+                background-color: #141414;
+                overflow: hidden;
+            }
+
+            * {
+                -webkit-app-region: drag;
+            }
+
+            input {
+                -webkit-app-region: no-drag;
+            }
+
+            .text {
+                color: whitesmoke;
+            }
+
+            .hide {
+                display: none;
+            }
+
+            .title-bar {
+                background-color: #141414;
+                padding-top: 5px;
+                position: fixed;
+                height: 30px;
+                width: 100%;
+                left: 0px;
+                top: 0px;
+            }
+
+            #close * {
+                -webkit-app-region: no-drag;
+                color: whitesmoke;
+                position: fixed;
+                right: 8px;
+                top: 8px;
+            }
+
+            .user {
+                vertical-align: bottom;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-right: 5px;
+                height: 22px;
+                width: 22px;
+            }
+
+            .pages {
+                text-align: center;
+                padding-top: 30px;
+            }
+
+            .signedinpage span {
+                font-size: 200px;
+            }
+
+            .signinpage {
+                padding-top: 100px;
+            }
+
+            .integrationheader {
+                width: 40vw;
+            }
+
+            .input::placeholder {
+                color: grey;
+            }
+
+            .signinpage input {
+                width: 25vw;
+                margin: 2px;
+            }
+
+            .signout {
+                -webkit-app-region: no-drag;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="title-bar"></div>
+        <div class="pages">
+            <div class="signinpage">
+                <img class="integrationheader" src="https://assets.casterlabs.co/casterlabs_x_caffeine.png" />
+                <br />
+                <br />
+                <div class="userandpass hide">
+                    <input id="username" type="input" placeholder="Username" class="input" />
+                    <br />
+                    <input id="password" type="password" placeholder="Password" class="input" />
+                    <br />
+                    <input type="submit" value="Signin" class="button" onclick="sendSignin()" />
+                </div>
+                <div class="spinner">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+                <div class="mfa hide">
+                    <input id="mfa" type="input" placeholder="2 Factor Code" class="input" />
+                    <br />
+                    <input type="submit" value="Signin" class="button" onclick="sendSignin()" />
+                </div>
+            </div>
+            <div class="signedinpage hide">
+                <span>
+                    🎉
+                </span>
+                <h1 class="title text">
+                    You're signed in!
+                </h1>
+                <a class="signout" onclick="sendSignout();">
+                    Signout
+                </a>
+            </div>
+        </div>
+        <a id="close" title="Close">
+            <ion-icon name="close"></ion-icon>
+        </a>
+    </body>
+
+    <footer>
+        <script>
+            const signedinPage = document.querySelector(".signedinpage");
+            const signinPage = document.querySelector(".signinpage");
+
+            function sendSignin() {
+                require("electron").remote.getCurrentWindow().emit("signin", {
+                    username: document.querySelector("#username").value,
+                    password: document.querySelector("#password").value,
+                    mfa: document.querySelector("#mfa").value
+                });
+
+                document.querySelector(".userandpass").classList.add("hide");
+                document.querySelector(".spinner").classList.remove("hide");
+            }
+
+            function sendSignout() {
+                require("electron").remote.getCurrentWindow().emit("signout", null);
+            }
+
+            function setDisplay(displayed) {
+                signedinPage.classList.add("hide");
+                signinPage.classList.add("hide");
+
+                switch (displayed) {
+                    case "signin": {
+                        document.querySelector(".userandpass").classList.remove("hide");
+                        document.querySelector(".spinner").classList.add("hide");
+                        document.querySelector(".mfa").classList.add("hide");
+                        signinPage.classList.remove("hide");
+                        break;
+                    }
+
+                    case "mfa": {
+                        document.querySelector(".userandpass").classList.add("hide");
+                        document.querySelector(".spinner").classList.add("hide");
+                        document.querySelector(".mfa").classList.remove("hide");
+                        signinPage.classList.remove("hide");
+                        break;
+                    }
+
+                    default: {
+                        signedinPage.classList.remove("hide");
+                        break;
+                    }
+                }
+            }
+
+            document.querySelector("#close").addEventListener("click", () => {
+                require("electron").remote.getCurrentWindow().close();
+            });
+        </script>
+    </footer>
+
+</html>

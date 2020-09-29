@@ -1,9 +1,10 @@
 
-const CaffeineLoginResponse = {
-    SUCCESSFUL: 0,
-    UNSUCCESSFUL: 1,
-    MFA_AWAIT: 2
-}
+window.addEventListener("beforeunload", () => {
+    if (CAFFEINE.loginWindow != null) {
+        CAFFEINE.loginWindow.close();
+    }
+});
+
 
 const CAFFEINE = {
     refreshToken: "",
@@ -14,42 +15,113 @@ const CAFFEINE = {
     viewerIds: [],
     knownViewers: [],
     anonymousCount: 0,
+    loginWindow: null,
+    module: null,
 
-    /*login(username, password, mfa) {
-        const instance = this;
-    
-        return new Promise((resolve) => {
-            if (instance.refreshToken) {
-                instance.refresh();
-            } else {
-                instance.loggedIn = false;
-    
-                let loginPayload = {
-                    "account": {
-                        "username": username,
-                        "password": password
-                    },
-                    "mfa": {
-                        "otp": mfa
-                    }
+    createWindow() {
+        if (!this.loginWindow) {
+            this.loginWindow = new BrowserWindow({
+                width: 800,
+                height: 600,
+                resizable: false,
+                transparent: false,
+                show: false,
+                titleBarStyle: "shown",
+                icon: __dirname + "/media/app_icon.png",
+                frame: false,
+                webPreferences: {
+                    nodeIntegration: true
                 }
-    
-                CaffeineViewerUtil.httpPost("https://api.caffeine.tv/v1/account/signin", loginPayload).then((text) => {
-                    let response = JSON.parse(text);
-    
-                    if (response.hasOwnProperty("next")) {
-                        resolve(CaffeineLoginResponse.MFA_AWAIT);
-                    } else if (response.hasOwnProperty("errors")) {
-                        resolve(CaffeineLoginResponse.UNSUCCESSFUL);
-                    } else {
-                        instance.refreshToken = response.refresh_token;
-                        instance.refresh();
-                        resolve(CaffeineLoginResponse.SUCCESSFUL);
+            });
+
+            this.loginWindow.once("close", () => {
+                this.loginWindow = null;
+            });
+
+            this.loginWindow.once("ready-to-show", () => {
+                this.loginWindow.show();
+
+                if (this.loggedIn) {
+                    instance.loginWindow.webContents.executeJavaScript("setDisplay('success');");
+                } else {
+                    instance.loginWindow.webContents.executeJavaScript("setDisplay('signin');");
+                }
+            });
+
+            const instance = this;
+            this.loginWindow.addListener("signin", (data) => {
+                this.login(data.username, data.password, data.mfa).then((response) => {
+                    switch (response) {
+                        case "UNSUCCESSFUL": {
+                            instance.loginWindow.webContents.executeJavaScript("setDisplay('signin');");
+                            break;
+                        }
+
+                        case "MFA_AWAIT": {
+                            instance.loginWindow.webContents.executeJavaScript("setDisplay('mfa');");
+                            break;
+                        }
+
+                        default: {
+                            instance.loginWindow.webContents.executeJavaScript("setDisplay('success');");
+                        }
                     }
                 });
+            });
+
+            this.loginWindow.addListener("signout", (data) => {
+                instance.loginWindow.webContents.executeJavaScript("setDisplay('signin');");
+
+                this.loggedIn = false;
+
+                CAFFEINATED.store.set("caffeine_refresh_token", null);
+
+                if (this.connected) {
+                    this.ws.close();
+                    this.connected = false;
+                }
+            });
+
+            this.loginWindow.loadURL("https://caffeinated.casterlabs.co/modules/caffeinelogin.html");
+        }
+    },
+
+    login(username, password, mfa) {
+        const instance = this;
+
+        this.loggedIn = false;
+
+        if (this.connected) {
+            this.ws.close();
+            this.connected = false;
+        }
+
+        return new Promise((resolve) => {
+            let loginPayload = {
+                "account": {
+                    "username": username,
+                    "password": password
+                },
+                "mfa": {
+                    "otp": mfa
+                }
             }
+
+            CaffeineViewerUtil.httpPost("https://api.caffeine.tv/v1/account/signin", loginPayload).then((text) => {
+                let response = JSON.parse(text);
+
+                if (response.hasOwnProperty("next")) {
+                    resolve("MFA_AWAIT");
+                } else if (response.hasOwnProperty("errors")) {
+                    resolve("UNSUCCESSFUL");
+                } else {
+                    instance.refreshToken = response.refresh_token;
+                    instance.refresh(this.refreshToken, true);
+                    resolve("SUCCESSFUL");
+                }
+            });
         });
-    },*/
+    },
 
     refresh(refreshToken = this.refreshToken, reconnect) {
         if (this.connected) {
@@ -71,6 +143,8 @@ const CAFFEINE = {
                         instance.signed = signed.token;
                         instance.refreshToken = refreshToken;
                         instance.loggedIn = true;
+
+                        CAFFEINATED.store.set("caffeine_refresh_token", refreshToken);
 
                         if (reconnect) {
                             this.connectViewers();
@@ -264,39 +338,47 @@ MODULES.moduleClasses["casterlabs_caffeine_integration"] = class {
         this.namespace = "casterlabs_caffeine_integration";
         this.type = "settings";
         this.id = id;
+
+        this.defaultSettings.signin = () => {
+            CAFFEINE.createWindow();
+        };
+
+        CAFFEINE.module = this;
     }
 
     init() {
         const div = document.getElementById(this.namespace + "_" + this.id);
 
         STREAM_INTEGRATION.addEventListener("platform", (platform) => {
-            // Hide the Caffeine stream box if not on caffeine
+            // Hide the Caffeine settings box if not on Caffeine
             if (platform == "CAFFEINE") {
                 div.classList.remove("hide");
+
+                if (CAFFEINE.refreshToken.length < 0) {
+                    CAFFEINE.createWindow();
+                }
             } else {
                 div.classList.add("hide");
+
+                if (CAFFEINE.loginWindow) {
+                    CAFFEINE.loginWindow.close();
+                }
             }
         });
 
-        this.onSettingsUpdate(); // Try and connect.
-    }
+        let token = CAFFEINATED.store.get("caffeine_refresh_token");
 
-    getDataToStore() {
-        return this.settings;
-    }
-
-    onSettingsUpdate() {
-        this.settings.refresh_token = this.settings.refresh_token.split('"').join("");
-
-        CAFFEINE.refresh(this.settings.refresh_token, true);
+        if (token) {
+            CAFFEINE.refresh(token, true);
+        }
     }
 
     settingsDisplay = {
-        refresh_token: "password"
+        signin: "button"
     };
 
     defaultSettings = {
-        refresh_token: ""
+        // signin: () => {};
     };
 
 };

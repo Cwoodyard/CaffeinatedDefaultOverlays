@@ -35,14 +35,14 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
         });
 
         STREAM_INTEGRATION.addEventListener("viewcount", (count) => {
-            if (instance.util.window != null) {
-                instance.util.window.webContents.executeJavaScript("setViewerCount(" + count + ");");
+            if (instance.util.viewersWindow != null) {
+                instance.util.viewersWindow.webContents.executeJavaScript("setViewerCount(" + count + ");");
             }
         });
 
         STREAM_INTEGRATION.addEventListener("viewers", (viewers) => {
-            if (instance.util.window != null) {
-                instance.util.window.webContents.executeJavaScript("setViewers(" + JSON.stringify(viewers) + ");");
+            if (instance.util.viewersWindow != null) {
+                instance.util.viewersWindow.webContents.executeJavaScript("setViewers(" + JSON.stringify(viewers) + ");");
             }
         });
 
@@ -157,23 +157,17 @@ class VerticalChatUtil {
             this.createWindow();
         });
 
-        require("electron").remote.getCurrentWindow().on("close", () => {
-            if (this.window != null) {
-                this.window.close();
-            }
-        });
-
         window.addEventListener("beforeunload", () => {
-            if (this.window != null) {
-                this.window.close();
+            if (this.viewersWindow != null) {
+                this.viewersWindow.close();
             }
         });
 
     }
 
     createWindow() {
-        if (this.window == null) {
-            this.window = new BrowserWindow({
+        if (!this.viewersWindow) {
+            this.viewersWindow = new BrowserWindow({
                 width: 200,
                 height: 400,
                 resizable: true,
@@ -187,21 +181,20 @@ class VerticalChatUtil {
                 }
             });
 
-            this.window.once("close", () => {
-                this.window = null;
+            this.viewersWindow.once("close", () => {
+                this.viewersWindow = null;
             });
 
-            this.window.once("ready-to-show", () => {
-                this.window.show();
+            this.viewersWindow.once("ready-to-show", () => {
+                this.viewersWindow.show();
 
-                this.window.webContents.executeJavaScript("setViewerCount(" + STREAM_INTEGRATION.viewerCount + ");");
-                this.window.webContents.executeJavaScript("setViewers(" + JSON.stringify(Object.values(STREAM_INTEGRATION.viewers)) + ");");
+                this.viewersWindow.webContents.executeJavaScript("setViewerCount(" + STREAM_INTEGRATION.viewerCount + ");");
+                this.viewersWindow.webContents.executeJavaScript("setViewers(" + JSON.stringify(Object.values(STREAM_INTEGRATION.viewers)) + ");");
             });
 
-            this.window.loadURL("https://caffeinated.casterlabs.co/modules/chatviewers.html");
+            this.viewersWindow.loadURL("https://caffeinated.casterlabs.co/modules/chatviewers.html");
         }
     }
-
 
     addMessage(sender, profilePic, color, message, id, imageLink) {
         let div = document.createElement("div");
