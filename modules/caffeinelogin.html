@@ -2,6 +2,7 @@
 <html>
 
     <head>
+        <meta charset="utf-8" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" />
         <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
@@ -126,7 +127,7 @@
             }
 
             .integrationheader {
-                width: 40vw;
+                width: 20vw;
             }
 
             .input::placeholder {
@@ -141,14 +142,24 @@
             .signout {
                 -webkit-app-region: no-drag;
             }
+
+            .disclaimer {
+                width: 80vw;
+                margin: auto;
+                padding-top: 50px;
+                text-align: justify;
+                color: #777777;
+            }
         </style>
     </head>
 
     <body>
         <div class="title-bar"></div>
         <div class="pages">
-            <div class="signinpage">
-                <img class="integrationheader" src="https://assets.casterlabs.co/casterlabs_x_caffeine.png" />
+            <div class="signinpage hide">
+                <img class="integrationheader" src="https://assets.casterlabs.co/logo/casterlabs_full_white.png" />
+                <br />
+                <span style="color: white">Login with Caffeine</span>
                 <br />
                 <br />
                 <div class="userandpass hide">
@@ -157,8 +168,17 @@
                     <input id="password" type="password" placeholder="Password" class="input" />
                     <br />
                     <input type="submit" value="Signin" class="button" onclick="sendSignin()" />
+                    <div class="disclaimer">
+                        <span>
+                            <span style="font-weight: bold">DISCLAIMER:</span>
+                            Casterlabs uses your login information in order to access view count and to be able to change the game and thumbnail.
+                            This is not required for normal functionality (chat, follows, etc).
+                            All login related things are done on client side, Casterlabs does not in any way log your login information.
+                            Use it at your own risk.
+                        </span>
+                    </div>
                 </div>
-                <div class="spinner">
+                <div class="spinner hide">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
                     <div class="bounce3"></div>
