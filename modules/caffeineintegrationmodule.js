@@ -75,6 +75,7 @@ const CAFFEINE = {
                 this.loggedIn = false;
 
                 CAFFEINATED.store.set("caffeine_refresh_token", null);
+                document.querySelector("#casterlabs_caffeine_integration_caffeine_integration").querySelector("[name=signin]").innerText = "Signin";
 
                 if (this.connected) {
                     this.ws.close();
@@ -145,6 +146,10 @@ const CAFFEINE = {
                         instance.loggedIn = true;
 
                         CAFFEINATED.store.set("caffeine_refresh_token", refreshToken);
+
+                        CaffeineViewerUtil.getUser(instance.credential.caid).then((user) => {
+                            document.querySelector("#casterlabs_caffeine_integration_caffeine_integration").querySelector("[name=signin]").innerText = "Signed in as " + user.username;
+                        });
 
                         if (reconnect) {
                             this.connectViewers();
