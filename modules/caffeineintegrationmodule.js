@@ -349,10 +349,11 @@ MODULES.moduleClasses["casterlabs_caffeine_integration"] = class {
         };
 
         CAFFEINE.module = this;
+
     }
 
     init() {
-        const div = document.getElementById(this.namespace + "_" + this.id);
+        const div = document.getElementById(this.namespace + "_" + this.id).parentElement;
 
         STREAM_INTEGRATION.addEventListener("platform", (platform) => {
             // Hide the Caffeine settings box if not on Caffeine

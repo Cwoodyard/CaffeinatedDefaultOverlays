@@ -124,14 +124,9 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
                 overflow-x: wrap;
             }
         </style>
-        <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
         <div class="container verticalchatmodule">
             <div id="chatbox"></div>
             <div class="buttons">
-                <button class="button" id="vcclear">
-                    Clear
-                </button>
-                <br />
                 <button class="button" id="vcopen">
                     Viewers
                 </button>
@@ -148,10 +143,6 @@ class VerticalChatUtil {
 
     constructor(module) {
         this.module = module;
-
-        this.module.page.querySelector("#vcclear").addEventListener("click", () => {
-            module.page.querySelector("#chatbox").innerHTML = "";
-        });
 
         this.module.page.querySelector("#vcopen").addEventListener("click", () => {
             this.createWindow();

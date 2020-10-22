@@ -1,13 +1,9 @@
 {
     "supported": [
-        "0.4.0-pre*",
-        "0.4.0-release",
-        "0.4.1-release",
-        "0.5.0-pre*",
-        "0.5.0-release"
+        "*"
     ],
     "unsupported": [],
-    "version": "0.4.16",
+    "version": "0.4.17",
     "name": "Caffeinated 0.4 Repo",
     "overlays": [
         "modules/streamintegrationpolyfill.js",
@@ -22,12 +18,21 @@
         "modules/goalmodule.js",
         "modules/creditmodule.js",
         "modules/donationtickermodule.js",
-        "modules/chatdisplaymodule.js"
+        "modules/chatdisplaymodule.js",
+        "modules/rotatormodule.js"
     ],
     "required": [
         {
             "namespace": "casterlabs_caffeine_integration",
             "id": "caffeine_integration"
+        },
+        {
+            "namespace": "caffeine_game_picker",
+            "id": "game_picker"
+        },
+        {
+            "namespace": "caffeine_broadcast_image",
+            "id": "broadcast_image"
         },
         {
             "namespace": "casterlabs_donation",
@@ -78,12 +83,8 @@
             "id": "chat_display"
         },
         {
-            "namespace": "caffeine_game_picker",
-            "id": "game_picker"
-        },
-        {
-            "namespace": "caffeine_broadcast_image",
-            "id": "broadcast_image"
+            "namespace": "casterlabs_rotator",
+            "id": "text_rotator"
         }
     ]
 }

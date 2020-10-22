@@ -57,10 +57,10 @@ MODULES.moduleClasses["caffeine_game_picker"] = class {
     }
 
     init() {
-        const div = document.getElementById(this.namespace + "_" + this.id);
+        const div = document.getElementById(this.namespace + "_" + this.id).parentElement;
 
         STREAM_INTEGRATION.addEventListener("platform", (platform) => {
-            // Hide the Caffeine stream box if not on caffeine
+            // Hide the Caffeine settings box if not on Caffeine
             if (platform == "CAFFEINE") {
                 div.classList.remove("hide");
             } else {
@@ -70,7 +70,7 @@ MODULES.moduleClasses["caffeine_game_picker"] = class {
     }
 
     settingsDisplay = {
-        game: "select",
+        game: "search",
         update: "button"
     };
 

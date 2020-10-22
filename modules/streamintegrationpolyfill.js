@@ -1,8 +1,3 @@
-koi.addEventListener("userupdate", (event) => {
-    STREAM_INTEGRATION.platform = event.streamer.platform;
-    STREAM_INTEGRATION.broadcast("platform", STREAM_INTEGRATION.platform);
-});
-
 const STREAM_INTEGRATION = {
     listeners: {},
     viewers: {},
@@ -10,7 +5,11 @@ const STREAM_INTEGRATION = {
     platform: "",
 
     isPlatform(platform) {
-        return this.platform.toLowerCase() == platform.toLowerCase();
+        if (this.platform) {
+            return this.platform.toLowerCase() == platform.toLowerCase();
+        } else {
+            return false;
+        }
     },
 
     addEventListener(type, callback) {
@@ -23,6 +22,15 @@ const STREAM_INTEGRATION = {
         callbacks.push(callback);
 
         this.listeners[type] = callbacks;
+
+        if ((type === "platform") && this.platform) {
+            callback(this.platform);
+        }
+    },
+
+    updatePlatform(platform) {
+        this.platform = platform;
+        STREAM_INTEGRATION.broadcast("platform", this.platform);
     },
 
     broadcast(type, data) {
@@ -41,3 +49,11 @@ const STREAM_INTEGRATION = {
     }
 
 };
+
+koi.addEventListener("userupdate", (event) => {
+    STREAM_INTEGRATION.updatePlatform(event.streamer.platform);
+});
+
+if (CAFFEINATED.userdata) {
+    STREAM_INTEGRATION.updatePlatform(userdata.streamer.platform);
+}

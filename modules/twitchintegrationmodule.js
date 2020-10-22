@@ -6,7 +6,7 @@ const TWITCH = {
         if (STREAM_INTEGRATION.isPlatform("twitch")) {
             const instance = this;
 
-            fetch("https://tmi.twitch.tv/group/user/" + CAFFEINATED.userdata.streamer.username + "/chatters").then((response) => response.json()).then((viewerJson) => {
+            fetch("https://tmi.twitch.tv/group/user/" + CAFFEINATED.userdata.streamer.username.toLowerCase() + "/chatters").then((response) => response.json()).then((viewerJson) => {
                 let viewerList = [];
 
                 // Update count
