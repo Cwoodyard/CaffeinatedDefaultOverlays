@@ -108,24 +108,78 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
                 position: relative;
                 display: flex;
                 align-items: center;
+                border-radius: 8px;
+                cursor: default;
             }
-        
+
             .vcimage {
                 border-radius: 50%;
                 object-fit: cover;
                 height: 22px;
                 width: 22px;
-                margin-right: 5px;
+                margin: 1px 5px;
                 vertical-align: bottom;
             }
 
             .verticalchatmodule {
                 margin-bottom: 35px;
+                margin-top: 25px;
                 overflow-x: wrap;
+            }
+
+            ul{
+                list-style: none;
+              }
+              
+            ul#chatbox>li{
+                height: auto;
+                position: relative;
+                list-style: none;
+                margin-left: -30px;
+            }
+            
+            ul li ul{
+                display: none;
+            }
+            
+            ul li a{
+                display: inline-block;
+                height: 100%;
+                text-decoration: none;
+                color: white !important;
+            }
+            
+            ul li:hover ul{
+                display: block;
+            }
+
+            ul li:hover > .vcchatmessage { 
+                background-color: #4d4d4d;
+            }
+            
+            ul.tip {
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+                display: none;
+                background-color: #4d4d4d;
+                position: absolute;
+                bottom: 100%;
+                padding: 0;
+                height: auto;
+                left: 0;
+                right: 0;
+                z-index: 1;
+                width: 63px;
+                height: 30px;
+            }
+
+            .tooltipbtn {
+                font-size: 20px;
+                margin-left: 5px;
             }
         </style>
         <div class="container verticalchatmodule">
-            <div id="chatbox"></div>
+            <ul id="chatbox"></ul>
             <div class="buttons">
                 <button class="button" id="vcopen">
                     Viewers
@@ -193,6 +247,10 @@ class VerticalChatUtil {
         let pfp = document.createElement("img");
         let text = document.createElement("span");
 
+        let chatbox = document.getElementById("chatbox");
+        let msg = document.createElement("li");
+        let tooltip = document.createElement("ul");
+
         pfp.src = profilePic;
         pfp.classList.add("vcimage");
 
@@ -218,10 +276,26 @@ class VerticalChatUtil {
             username.appendChild(image);
         }
 
-        this.module.page.querySelector("#chatbox").appendChild(div);
+        // this.module.page.querySelector("#chatbox").appendChild(div);
+
+        msg.appendChild(div);
+        tooltip.classList.add("tip");
+        tooltip.innerHTML = `
+            <div class="tooltipbtn" >
+                <a title="Upvote" id="upvote">
+                    <ion-icon name="arrow-up"></ion-icon>
+                </a>
+                <a title="Timeout" id="timeout" style="margin-left: 5px;">
+                    <ion-icon name="alert"></ion-icon>
+                </a>
+            </div>
+        `;
+        msg.appendChild(tooltip);
+        chatbox.appendChild(msg);
 
         this.jumpBottom();
     }
+
 
     addStatus(user, profilePic, color, type) {
         let div = document.createElement("div");
