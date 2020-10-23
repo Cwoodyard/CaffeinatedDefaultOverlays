@@ -24,7 +24,7 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
         });
 
         koi.addEventListener("upvote", (event) => {
-            instance.util.upvoteMessage(event);
+            instance.util.messageUpvote(event);
         });
 
         koi.addEventListener("follow", (event) => {
@@ -66,31 +66,36 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
 
             .upvote-1 {
                 /* 1+ */
-                background-color: #FF00FF;
+                color: #FF00FF;
             }
 
             .upvote-2 {
                 /* 10+ */
-                background-color: #00FF00;
+                color: #00FF00;
             }
 
             .upvote-3 {
                 /* 100+ */
-                background-color: #FFFF00;
+                color: #FFFF00;
             }
 
             .upvote-4 {
                 /* 1000+ */
-                background-color: #FFFFFF;
+                color: #FFFFFF;
             }
 
-            .buttons button {
+            .buttons .item {
                 height: 30px;
                 font-size: 15px;
                 padding-top: 0;
                 padding-bottom: calc(.2em - 1px);
                 -webkit-app-region: no-drag;
-                display: block;
+            }
+            
+            .buttons input {
+                width: 300px;
+                margin-bottom: 8px;
+                margin-right: 2px;
             }
             
             .vcviewicon {
@@ -207,7 +212,11 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
         <div class="container verticalchatmodule">
             <ul id="chatbox"></ul>
             <div class="buttons">
-                <button class="button" id="vcopen">
+                <!-- <input class="input item" id="vcmessage" />
+                <button class="button item" id="vcsend">
+                    Send
+                </button> -->
+                <button class="button item" id="vcopen">
                     Viewers
                 </button>
             </div>
@@ -258,7 +267,7 @@ class VerticalChatUtil {
         if (!this.viewersWindow) {
             this.viewersWindow = new BrowserWindow({
                 width: 200,
-                height: 400,
+                height: 500,
                 resizable: true,
                 transparent: false,
                 show: false,
@@ -287,16 +296,24 @@ class VerticalChatUtil {
 
     // Upvotes are coming.
     messageUpvote(event) {
-        let element = document.querySelector("[vc_message_id=" + event.id + "]");
+        let element = document.querySelector("[vc_message_id='" + event.id + "']");
 
-        if (event.upvotes >= 1) {
-            element.classList = "vcchatmessage upvote-1";
-        } else if (event.upvotes >= 10) {
-            element.classList = "vcchatmessage upvote-2";
-        } else if (event.upvotes >= 100) {
-            element.classList = "vcchatmessage upvote-3";
-        } else if (event.upvotes >= 1000) {
-            element.classList = "vcchatmessage upvote-4";
+        // Sometimes messages dont exist.
+        if (!element) {
+            this.addMessage(event.event);
+            this.messageUpvote(event);
+        } else {
+            element.innerText = event.upvotes;
+
+            if (event.upvotes >= 1) {
+                element.classList = "upvote-1";
+            } else if (event.upvotes >= 10) {
+                element.classList = "upvote-2";
+            } else if (event.upvotes >= 100) {
+                element.classList = "upvote-3";
+            } else if (event.upvotes >= 1000) {
+                element.classList = "upvote-4";
+            }
         }
     }
 
@@ -306,9 +323,9 @@ class VerticalChatUtil {
         let pfp = document.createElement("img");
         let text = document.createElement("span");
 
-        let chatbox = document.getElementById("chatbox");
         let msg = document.createElement("li");
         let tooltip = document.createElement("ul");
+        let counter = document.createElement("sup");
 
         pfp.src = event.sender.image_link;
         pfp.classList.add("vcimage");
@@ -322,9 +339,11 @@ class VerticalChatUtil {
         text.classList.add("vctext");
         text.innerText = event.message;
 
+        counter.setAttribute("vc_message_id", event.id);
+
         div.classList.add("vcchatmessage");
-        div.setAttribute("vc_message_id", event.id);
         div.appendChild(username);
+        div.appendChild(counter);
 
         if (event.image) {
             let image = document.createElement("img");
@@ -365,7 +384,7 @@ class VerticalChatUtil {
             msg.appendChild(tooltip);
         }
 
-        chatbox.appendChild(msg);
+        this.module.page.querySelector("#chatbox").appendChild(msg);
 
         this.jumpBottom();
     }
@@ -376,6 +395,7 @@ class VerticalChatUtil {
         let pfp = document.createElement("img");
         let username = document.createElement("span");
         let text = document.createElement("span");
+        let msg = document.createElement("li");
 
         pfp.src = profilePic;
         pfp.classList.add("vcimage");
@@ -396,7 +416,9 @@ class VerticalChatUtil {
         div.appendChild(username);
         div.appendChild(text);
 
-        this.module.page.querySelector("#chatbox").appendChild(div);
+        msg.appendChild(div);
+
+        this.module.page.querySelector("#chatbox").appendChild(msg);
 
         this.jumpBottom();
     }
