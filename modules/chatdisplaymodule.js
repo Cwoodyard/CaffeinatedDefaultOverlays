@@ -11,15 +11,20 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
         const instance = this;
 
         koi.addEventListener("chat", (event) => {
-            instance.util.addMessage(event.sender.username, event.sender.image_link, event.sender.color, event.message, event.id);
+            instance.util.addMessage(event);
         });
 
+        // Shares are depreceated.
         koi.addEventListener("share", (event) => {
-            instance.util.addMessage(event.sender.username, event.sender.image_link, event.sender.color, event.message, event.id);
+            instance.util.addMessage(event);
         });
 
         koi.addEventListener("donation", (event) => {
-            instance.util.addMessage(event.sender.username, event.sender.image_link, event.sender.color, event.message, event.id, event.image);
+            instance.util.addMessage(event);
+        });
+
+        koi.addEventListener("upvote", (event) => {
+            instance.util.upvoteMessage(event);
         });
 
         koi.addEventListener("follow", (event) => {
@@ -57,6 +62,26 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
                 right: 10px;
                 bottom: 5px;
                 z-index: 1000;
+            }
+
+            .upvote-1 {
+                /* 1+ */
+                background-color: #FF00FF;
+            }
+
+            .upvote-2 {
+                /* 10+ */
+                background-color: #00FF00;
+            }
+
+            .upvote-3 {
+                /* 100+ */
+                background-color: #FFFF00;
+            }
+
+            .upvote-4 {
+                /* 1000+ */
+                background-color: #FFFFFF;
             }
 
             .buttons button {
@@ -127,29 +152,29 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
                 overflow-x: wrap;
             }
 
-            ul{
+            ul {
                 list-style: none;
-              }
+            }
               
-            ul#chatbox>li{
+            ul#chatbox>li {
                 height: auto;
                 position: relative;
                 list-style: none;
                 margin-left: -30px;
             }
             
-            ul li ul{
+            ul li ul {
                 display: none;
             }
             
-            ul li a{
+            ul li a {
                 display: inline-block;
                 height: 100%;
                 text-decoration: none;
                 color: white !important;
             }
             
-            ul li:hover ul{
+            ul li:hover ul {
                 display: block;
             }
 
@@ -175,7 +200,8 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
 
             .tooltipbtn {
                 font-size: 20px;
-                margin-left: 5px;
+                margin-left: 10px;
+                margin-top: 5px;
             }
         </style>
         <div class="container verticalchatmodule">
@@ -185,6 +211,13 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
                     Viewers
                 </button>
             </div>
+        </div>
+        <div class="modal" id="timeout_modal">
+            <div class="modal-background"></div>
+                <div class="modal-content">
+
+                </div>
+            <button class="modal-close is-large" aria-label="close" id="timeout_modal_close"></button>
         </div>
         `;
 
@@ -202,12 +235,23 @@ class VerticalChatUtil {
             this.createWindow();
         });
 
+        this.module.page.querySelector("#timeout_modal_close").addEventListener("click", () => {
+            this.module.page.querySelector("#timeout_modal").classList.remove("is-active");
+        });
+
         window.addEventListener("beforeunload", () => {
             if (this.viewersWindow != null) {
                 this.viewersWindow.close();
             }
         });
+    }
 
+    timeoutCaffeine(user) {
+        this.timeoutTarget = user;
+
+        // TODO, use the caffeine ignore system. Modal should show yes or no.
+
+        this.module.page.querySelector("#timeout_modal").classList.add("is-active");
     }
 
     createWindow() {
@@ -241,7 +285,22 @@ class VerticalChatUtil {
         }
     }
 
-    addMessage(sender, profilePic, color, message, id, imageLink) {
+    // Upvotes are coming.
+    messageUpvote(event) {
+        let element = document.querySelector("[vc_message_id=" + event.id + "]");
+
+        if (event.upvotes >= 1) {
+            element.classList = "vcchatmessage upvote-1";
+        } else if (event.upvotes >= 10) {
+            element.classList = "vcchatmessage upvote-2";
+        } else if (event.upvotes >= 100) {
+            element.classList = "vcchatmessage upvote-3";
+        } else if (event.upvotes >= 1000) {
+            element.classList = "vcchatmessage upvote-4";
+        }
+    }
+
+    addMessage(event) {
         let div = document.createElement("div");
         let username = document.createElement("span");
         let pfp = document.createElement("img");
@@ -251,46 +310,61 @@ class VerticalChatUtil {
         let msg = document.createElement("li");
         let tooltip = document.createElement("ul");
 
-        pfp.src = profilePic;
+        pfp.src = event.sender.image_link;
         pfp.classList.add("vcimage");
 
         username.classList.add("vcusername");
-        username.style = "color: " + color + ";";
+        username.style = "color: " + event.sender.color + ";";
         username.appendChild(pfp);
-        username.appendChild(document.createTextNode(sender));
+        username.appendChild(document.createTextNode(event.sender.username));
         username.appendChild(text);
 
         text.classList.add("vctext");
-        text.innerText = message;
+        text.innerText = event.message;
 
         div.classList.add("vcchatmessage");
-        div.setAttribute("vc_message_id", id);
+        div.setAttribute("vc_message_id", event.id);
         div.appendChild(username);
 
-        if (imageLink) {
+        if (event.image) {
             let image = document.createElement("img");
 
             image.classList.add("vcimage");
-            image.src = imageLink;
+            image.src = event.image;
 
             username.appendChild(image);
         }
 
-        // this.module.page.querySelector("#chatbox").appendChild(div);
-
         msg.appendChild(div);
-        tooltip.classList.add("tip");
-        tooltip.innerHTML = `
-            <div class="tooltipbtn" >
-                <a title="Upvote" id="upvote">
-                    <ion-icon name="arrow-up"></ion-icon>
-                </a>
-                <a title="Timeout" id="timeout" style="margin-left: 5px;">
-                    <ion-icon name="alert"></ion-icon>
-                </a>
-            </div>
-        `;
-        msg.appendChild(tooltip);
+
+        // Make this only available on Caffeine.
+        if (STREAM_INTEGRATION.isPlatform("CAFFEINE")) {
+            let tooltipbtn = document.createElement("div");
+            let timeoutbtn = document.createElement("a");
+            let upvotebtn = document.createElement("a");
+
+            timeoutbtn.innerHTML = '<ion-icon name="alert"></ion-icon>';
+            timeoutbtn.title = "Timeout";
+            timeoutbtn.addEventListener("click", () => {
+                this.timeoutCaffeine(event.sender);
+            })
+
+            upvotebtn.innerHTML = '<ion-icon name="arrow-up"></ion-icon>';
+            upvotebtn.title = "Upvote";
+            upvotebtn.addEventListener("click", () => {
+                CAFFEINE.upvoteMessage(event.streamer.UUID, event.id);
+            });
+
+            tooltipbtn.classList.add("tooltipbtn");
+            tooltipbtn.appendChild(upvotebtn);
+            // tooltipbtn.appendChild(timeoutbtn); // TODO
+
+            tooltip.appendChild(tooltipbtn);
+            tooltip.classList.add("tip");
+
+            msg.appendChild(tooltip);
+        }
+
         chatbox.appendChild(msg);
 
         this.jumpBottom();
