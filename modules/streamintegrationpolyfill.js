@@ -55,5 +55,5 @@ koi.addEventListener("userupdate", (event) => {
 });
 
 if (CAFFEINATED.userdata) {
-    STREAM_INTEGRATION.updatePlatform(userdata.streamer.platform);
+    STREAM_INTEGRATION.updatePlatform(CAFFEINATED.userdata.streamer.platform);
 }
