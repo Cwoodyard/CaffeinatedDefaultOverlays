@@ -11,21 +11,14 @@ MODULES.moduleClasses["casterlabs_credits"] = class {
 
     init() {
         this.page.innerHTML = `
-            <img src="app_icon.png" alt="Caffeinated" class="center">
-                <br />
-            <h1>Our Supporters</h1>
-                <br />
-            <p>
-                <br />
-                Supporters above $10 will be listed here, thank you ♥
+            <h3 style="text-align:center">Our Supporters</h1>
+            <p style="text-align:center">
+                Supporters above $10 USD are listed below, thank you ♥
             </p>
-                <br />
-                <div id="supporters"></div>
-                <br />
-            <p>
-                Loving Caffeinated?
-                <br />
-                Feel free to support the project
+                <div style="text-align:center" id="supporters"></div>
+                <br/>
+            <p style="text-align:center">
+                Loving Caffeinated? Feel free to support the project
                 <a onclick="openLink('https://paypal.me/casterlabs')">
                 here.
                 </a>
