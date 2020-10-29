@@ -24,11 +24,7 @@ MODULES.moduleClasses["casterlabs_credits"] = class {
                 </a>
             </p>
             <h5 style="text-align:center"> ★ Our Supporters ★</h5>
-            <div style="text-align:center" id="supporters"></div>
-            <br>
-            <p style="text-align:center">
-            Supporters above $10 USD are listed above, thank you ♥
-            </p>
+            <div style="text-align:center;max-height:100%;overflow:auto;" id="supporters"></div>
         `;
 
         setInterval(this.update, 15000); // Every 15s
