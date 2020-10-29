@@ -11,18 +11,24 @@ MODULES.moduleClasses["casterlabs_credits"] = class {
 
     init() {
         this.page.innerHTML = `
-            <h3 style="text-align:center">Our Supporters</h1>
-            <p style="text-align:center">
-                Supporters above $10 USD are listed below, thank you ♥
-            </p>
-                <div style="text-align:center" id="supporters"></div>
-                <br/>
+        <style>
+        a 
+        {
+            color:#e94b4b; 
+        }
+        </style>
             <p style="text-align:center">
                 Loving Caffeinated? Feel free to support the project
-                <a onclick="openLink('https://paypal.me/casterlabs')">
+                <a onclick="openLink('https://ko-fi.com/casterlabs')">
                 here.
                 </a>
-            </p.
+            </p>
+            <h5 style="text-align:center"> ★ Our Supporters ★</h5>
+            <div style="text-align:center" id="supporters"></div>
+            <br>
+            <p style="text-align:center">
+            Supporters above $10 USD are listed above, thank you ♥
+            </p>
         `;
 
         setInterval(this.update, 15000); // Every 15s
