@@ -164,6 +164,15 @@ const CAFFEINE = {
         }
     },
 
+    upvoteMessage(streamer, id) {
+        let payload = {
+            s: streamer.substring(4, streamer.length), // Convert from CAID to StageID
+            u: id
+        };
+
+        CaffeineViewerUtil.httpPost("https://realtime.caffeine.tv/v2/reaper/messages/" + btoa(JSON.stringify(payload)) + "/endorsements", {}, this.credential.access_token);
+    },
+
     connectViewers() {
         try {
             if (this.connected) {

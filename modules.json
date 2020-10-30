@@ -6,6 +6,7 @@
     "version": "0.4.17",
     "name": "Caffeinated 0.4 Repo",
     "overlays": [
+        "patches/koipatch.js",
         "modules/streamintegrationpolyfill.js",
         "modules/twitchintegrationmodule.js",
         "modules/caffeineintegrationmodule.js",

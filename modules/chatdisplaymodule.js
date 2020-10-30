@@ -11,15 +11,20 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
         const instance = this;
 
         koi.addEventListener("chat", (event) => {
-            instance.util.addMessage(event.sender.username, event.sender.image_link, event.sender.color, event.message, event.id);
+            instance.util.addMessage(event);
         });
 
+        // Shares are depreceated.
         koi.addEventListener("share", (event) => {
-            instance.util.addMessage(event.sender.username, event.sender.image_link, event.sender.color, event.message, event.id);
+            instance.util.addMessage(event);
         });
 
         koi.addEventListener("donation", (event) => {
-            instance.util.addMessage(event.sender.username, event.sender.image_link, event.sender.color, event.message, event.id, event.image);
+            instance.util.addMessage(event);
+        });
+
+        koi.addEventListener("upvote", (event) => {
+            instance.util.messageUpvote(event);
         });
 
         koi.addEventListener("follow", (event) => {
@@ -59,13 +64,38 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
                 z-index: 1000;
             }
 
-            .buttons button {
+            .upvote-1 {
+                /* 1+ */
+                color: #FF00FF;
+            }
+
+            .upvote-2 {
+                /* 10+ */
+                color: #00FF00;
+            }
+
+            .upvote-3 {
+                /* 100+ */
+                color: #FFFF00;
+            }
+
+            .upvote-4 {
+                /* 1000+ */
+                color: #FFFFFF;
+            }
+
+            .buttons .item {
                 height: 30px;
                 font-size: 15px;
                 padding-top: 0;
                 padding-bottom: calc(.2em - 1px);
                 -webkit-app-region: no-drag;
-                display: block;
+            }
+            
+            .buttons input {
+                width: 300px;
+                margin-bottom: 8px;
+                margin-right: 2px;
             }
             
             .vcviewicon {
@@ -108,29 +138,95 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
                 position: relative;
                 display: flex;
                 align-items: center;
+                border-radius: 8px;
+                cursor: default;
             }
-        
+
             .vcimage {
                 border-radius: 50%;
                 object-fit: cover;
                 height: 22px;
                 width: 22px;
-                margin-right: 5px;
+                margin: 1px 5px;
                 vertical-align: bottom;
             }
 
             .verticalchatmodule {
                 margin-bottom: 35px;
+                margin-top: 25px;
                 overflow-x: wrap;
+            }
+
+            ul {
+                list-style: none;
+            }
+              
+            ul#chatbox>li {
+                height: auto;
+                position: relative;
+                list-style: none;
+                margin-left: -30px;
+            }
+            
+            ul li ul {
+                display: none;
+            }
+            
+            ul li a {
+                display: inline-block;
+                height: 100%;
+                text-decoration: none;
+                color: white !important;
+            }
+            
+            ul li:hover ul {
+                display: block;
+            }
+
+            ul li:hover > .vcchatmessage { 
+                background-color: #4d4d4d;
+            }
+            
+            ul.tip {
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+                display: none;
+                background-color: #4d4d4d;
+                position: absolute;
+                bottom: 100%;
+                padding: 0;
+                height: auto;
+                left: 0;
+                right: 0;
+                z-index: 1;
+                width: 63px;
+                height: 30px;
+            }
+
+            .tooltipbtn {
+                font-size: 20px;
+                margin-left: 10px;
+                margin-top: 5px;
             }
         </style>
         <div class="container verticalchatmodule">
-            <div id="chatbox"></div>
+            <ul id="chatbox"></ul>
             <div class="buttons">
-                <button class="button" id="vcopen">
+                <!-- <input class="input item" id="vcmessage" />
+                <button class="button item" id="vcsend">
+                    Send
+                </button> -->
+                <button class="button item" id="vcopen">
                     Viewers
                 </button>
             </div>
+        </div>
+        <div class="modal" id="timeout_modal">
+            <div class="modal-background"></div>
+                <div class="modal-content">
+
+                </div>
+            <button class="modal-close is-large" aria-label="close" id="timeout_modal_close"></button>
         </div>
         `;
 
@@ -148,19 +244,30 @@ class VerticalChatUtil {
             this.createWindow();
         });
 
+        this.module.page.querySelector("#timeout_modal_close").addEventListener("click", () => {
+            this.module.page.querySelector("#timeout_modal").classList.remove("is-active");
+        });
+
         window.addEventListener("beforeunload", () => {
             if (this.viewersWindow != null) {
                 this.viewersWindow.close();
             }
         });
+    }
 
+    timeoutCaffeine(user) {
+        this.timeoutTarget = user;
+
+        // TODO, use the caffeine ignore system. Modal should show yes or no.
+
+        this.module.page.querySelector("#timeout_modal").classList.add("is-active");
     }
 
     createWindow() {
         if (!this.viewersWindow) {
             this.viewersWindow = new BrowserWindow({
                 width: 200,
-                height: 400,
+                height: 500,
                 resizable: true,
                 transparent: false,
                 show: false,
@@ -187,47 +294,108 @@ class VerticalChatUtil {
         }
     }
 
-    addMessage(sender, profilePic, color, message, id, imageLink) {
+    // Upvotes are coming.
+    messageUpvote(event) {
+        let element = document.querySelector("[vc_message_id='" + event.id + "']");
+
+        // Sometimes messages dont exist.
+        if (!element) {
+            this.addMessage(event.event);
+            this.messageUpvote(event);
+        } else {
+            element.innerText = event.upvotes;
+
+            if (event.upvotes >= 1) {
+                element.classList = "upvote-1";
+            } else if (event.upvotes >= 10) {
+                element.classList = "upvote-2";
+            } else if (event.upvotes >= 100) {
+                element.classList = "upvote-3";
+            } else if (event.upvotes >= 1000) {
+                element.classList = "upvote-4";
+            }
+        }
+    }
+
+    addMessage(event) {
         let div = document.createElement("div");
         let username = document.createElement("span");
         let pfp = document.createElement("img");
         let text = document.createElement("span");
 
-        pfp.src = profilePic;
+        let msg = document.createElement("li");
+        let tooltip = document.createElement("ul");
+        let counter = document.createElement("sup");
+
+        pfp.src = event.sender.image_link;
         pfp.classList.add("vcimage");
 
         username.classList.add("vcusername");
-        username.style = "color: " + color + ";";
+        username.style = "color: " + event.sender.color + ";";
         username.appendChild(pfp);
-        username.appendChild(document.createTextNode(sender));
+        username.appendChild(document.createTextNode(event.sender.username));
         username.appendChild(text);
 
         text.classList.add("vctext");
-        text.innerText = message;
+        text.innerText = event.message;
+
+        counter.setAttribute("vc_message_id", event.id);
 
         div.classList.add("vcchatmessage");
-        div.setAttribute("vc_message_id", id);
         div.appendChild(username);
+        div.appendChild(counter);
 
-        if (imageLink) {
+        if (event.image) {
             let image = document.createElement("img");
 
             image.classList.add("vcimage");
-            image.src = imageLink;
+            image.src = event.image;
 
             username.appendChild(image);
         }
 
-        this.module.page.querySelector("#chatbox").appendChild(div);
+        msg.appendChild(div);
+
+        // Make this only available on Caffeine.
+        if (STREAM_INTEGRATION.isPlatform("CAFFEINE")) {
+            let tooltipbtn = document.createElement("div");
+            let timeoutbtn = document.createElement("a");
+            let upvotebtn = document.createElement("a");
+
+            timeoutbtn.innerHTML = '<ion-icon name="alert"></ion-icon>';
+            timeoutbtn.title = "Timeout";
+            timeoutbtn.addEventListener("click", () => {
+                this.timeoutCaffeine(event.sender);
+            })
+
+            upvotebtn.innerHTML = '<ion-icon name="arrow-up"></ion-icon>';
+            upvotebtn.title = "Upvote";
+            upvotebtn.addEventListener("click", () => {
+                CAFFEINE.upvoteMessage(event.streamer.UUID, event.id);
+            });
+
+            tooltipbtn.classList.add("tooltipbtn");
+            tooltipbtn.appendChild(upvotebtn);
+            // tooltipbtn.appendChild(timeoutbtn); // TODO
+
+            tooltip.appendChild(tooltipbtn);
+            tooltip.classList.add("tip");
+
+            msg.appendChild(tooltip);
+        }
+
+        this.module.page.querySelector("#chatbox").appendChild(msg);
 
         this.jumpBottom();
     }
+
 
     addStatus(user, profilePic, color, type) {
         let div = document.createElement("div");
         let pfp = document.createElement("img");
         let username = document.createElement("span");
         let text = document.createElement("span");
+        let msg = document.createElement("li");
 
         pfp.src = profilePic;
         pfp.classList.add("vcimage");
@@ -248,7 +416,9 @@ class VerticalChatUtil {
         div.appendChild(username);
         div.appendChild(text);
 
-        this.module.page.querySelector("#chatbox").appendChild(div);
+        msg.appendChild(div);
+
+        this.module.page.querySelector("#chatbox").appendChild(msg);
 
         this.jumpBottom();
     }
