@@ -11,19 +11,20 @@ MODULES.moduleClasses["casterlabs_credits"] = class {
 
     init() {
         this.page.innerHTML = `
-            <p>
-                Loving Caffeinated?
-                <br />
-                Feel free to support the project
-                <a onclick="openLink('https://paypal.me/casterlabs')">
-                    here.
+        <style>
+        a 
+        {
+            color:#e94b4b; 
+        }
+        </style>
+            <p style="text-align:center">
+                Loving Caffeinated? Feel free to support the project
+                <a onclick="openLink('https://ko-fi.com/casterlabs')">
+                here.
                 </a>
-                <br />
-                <br />
-                Supporters above $10 will be listed here, thank you ♥
             </p>
-            <br />
-            <div id="supporters"></div>
+            <h5 style="text-align:center"> ★ Our Supporters ★</h5>
+            <div style="text-align:center;max-height:100%;overflow:auto;" id="supporters"></div>
         `;
 
         setInterval(this.update, 15000); // Every 15s
