@@ -3,7 +3,7 @@
         "*"
     ],
     "unsupported": [],
-    "version": "0.4.17",
+    "version": "0.4.18",
     "name": "Caffeinated 0.4 Repo",
     "overlays": [
         "patches/koipatch.js",
