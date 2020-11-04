@@ -11,17 +11,9 @@ MODULES.moduleClasses["casterlabs_credits"] = class {
 
     init() {
         this.page.innerHTML = `
-        <style>
-        a 
-        {
-            color:#e94b4b; 
-        }
-        </style>
             <p style="text-align:center">
                 Loving Caffeinated? Feel free to support the project
-                <a onclick="openLink('https://ko-fi.com/casterlabs')">
-                here.
-                </a>
+                <a style="color:#e94b4b" onclick="openLink('https://ko-fi.com/casterlabs')">here</a>.
             </p>
             <h5 style="text-align:center"> ★ Our Supporters ★</h5>
             <div style="text-align:center;max-height:100%;overflow:auto;" id="supporters"></div>
