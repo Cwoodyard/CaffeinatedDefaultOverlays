@@ -312,14 +312,14 @@ class VerticalChatUtil {
         } else {
             element.innerText = event.upvotes;
 
-            if (event.upvotes >= 1) {
-                element.classList = "upvote-1";
-            } else if (event.upvotes >= 10) {
-                element.classList = "upvote-2";
+            if (event.upvotes >= 1000) {
+                element.classList = "upvote-4";
             } else if (event.upvotes >= 100) {
                 element.classList = "upvote-3";
-            } else if (event.upvotes >= 1000) {
-                element.classList = "upvote-4";
+            } else if (event.upvotes >= 10) {
+                element.classList = "upvote-2";
+            } else if (event.upvotes >= 1) {
+                element.classList = "upvote-1";
             }
         }
     }
