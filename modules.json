@@ -9,6 +9,7 @@
     "version": "1.0.0",
     "name": "Caffeinated Beta Repo",
     "overlays": [
+        "kinoko.js",
         "patches/koipatch.js",
         "modules/streamstatsmodule.js",
         "modules/streamintegrationpolyfill.js",
@@ -24,7 +25,8 @@
         "modules/creditmodule.js",
         "modules/donationtickermodule.js",
         "modules/chatdisplaymodule.js",
-        "modules/rotatormodule.js"
+        "modules/rotatormodule.js",
+        "modules/companionmodule.js"
     ],
     "required": [
         {
@@ -42,6 +44,10 @@
         {
             "namespace": "casterlabs_stream_stats",
             "id": "stream_stats"
+        },
+        {
+            "namespace": "casterlabs_companion",
+            "id": "casterlabs_companion"
         },
         {
             "namespace": "casterlabs_donation",
