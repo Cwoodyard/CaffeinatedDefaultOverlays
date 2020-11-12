@@ -8,7 +8,7 @@ MODULES.moduleClasses["casterlabs_rain"] = class {
     }
 
     linkDisplay = {
-        path: "https://caffeinated.casterlabs.co/eomji.html",
+        path: "https://caffeinated.casterlabs.co/emoji.html",
         option: {
             name: "Test",
             onclick(instance) {
