@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            body {
+                height: 100vh;
+                width: 100vw;
+                margin: 0;
+                padding: 0;
+                opacity: 0.6;
+            }
+        </style>
+        <title>Emoji Rain</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+        <script src="https://caffeinated.casterlabs.co/overlayutil.js"></script>
+    </head>
+
+    <body>
+        <canvas id="canvas"></canvas>
+    </body>
+
+    <footer>
+        <script>
+            let timeout = 10 * 1000;
+            let maxEmojis = 1000;
+            let size = 15;
+
+            const regex = /[\u{1f300}-\u{1f5ff}\u{1f900}-\u{1f9ff}\u{1f600}-\u{1f64f}\u{1f680}-\u{1f6ff}\u{2600}-\u{26ff}\u{2700}-\u{27bf}\u{1f1e6}-\u{1f1ff}\u{1f191}-\u{1f251}\u{1f004}\u{1f0cf}\u{1f170}-\u{1f171}\u{1f17e}-\u{1f17f}\u{1f18e}\u{3030}\u{2b50}\u{2b55}\u{2934}-\u{2935}\u{2b05}-\u{2b07}\u{2b1b}-\u{2b1c}\u{3297}\u{3299}\u{303d}\u{00a9}\u{00ae}\u{2122}\u{23f3}\u{24c2}\u{23e9}-\u{23ef}\u{25b6}\u{23f8}-\u{23fa}]/gu;
+            const overlay = new OverlayUtil("casterlabs_rain");
+            const frameTime = 1000 / 60; // 60hz
+            const minOpacity = 0.8;
+            let avgTickTime = 0;
+            let emojis = [];
+            let canvas;
+            let ctx;
+
+            overlay.on("config", (config) => {
+                timeout = config["life_time (Seconds)"] * 1000;
+                maxEmojis = config.max_emojis;
+                size = config.size;
+
+                ctx.font = size + "px Sans-Serif";
+            });
+
+            overlay.on("event", (event) => {
+                let message = event.message.match(regex);
+
+                message.forEach(create);
+            });
+
+            function create(c) {
+                if (emojis.length < maxEmojis) {
+                    let scale = (Math.random() * (1 - minOpacity)) + minOpacity;
+
+                    emojis.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        ys: Math.random() + 1,
+                        scale: scale,
+                        opacity: 0.01,
+                        text: c,
+                        dying: false,
+                        time: performance.now()
+                    });
+                }
+            }
+
+            function draw() {
+                const start = performance.now();
+
+                if (emojis.length > 0) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    emojis.forEach((emoji) => {
+                        emoji.y += emoji.ys;
+
+                        if (emoji.y > canvas.height) {
+                            emoji.x = Math.random() * canvas.width;
+                            emoji.y = -size;
+                        }
+
+                        if ((emoji.time + timeout) < start) {
+                            emoji.dying = true;
+                        }
+
+                        if (emoji.dying) {
+                            if (emoji.opacity > 0.005) {
+                                emoji.opacity -= 0.01;
+                            } else {
+                                emojis.splice(emojis.indexOf(emoji), 1);
+                            }
+                        } else if (emoji.opacity < emoji.scale) {
+                            emoji.opacity += 0.01;
+                        }
+
+                        ctx.fillStyle = "white";
+                        ctx.globalAlpha = emoji.opacity;
+                        ctx.fillText(emoji.text, emoji.x, emoji.y);
+                    });
+                }
+
+                const time = performance.now() - start;
+
+                avgTickTime = (avgTickTime + time) / 2;
+
+                setTimeout(draw, frameTime - time);
+            }
+
+            /*setInterval(() => {
+                console.debug(avgTickTime.toFixed(2) + "ms/frame " + emojis.length + " emojis (" + ((avgTickTime / frameTime) * 100).toFixed(2) + "% of the frame budget)");
+            }, 1000);*/
+
+            canvas = document.querySelector("#canvas");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            ctx = this.canvas.getContext("2d");
+
+            ctx.font = size + "px Sans-Serif";
+
+            draw();
+        </script>
+    </footer>
+
+</html>

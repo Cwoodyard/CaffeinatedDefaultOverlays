@@ -3,7 +3,7 @@
         "*"
     ],
     "unsupported": [],
-    "version": "0.5.0",
+    "version": "0.5.1",
     "name": "Caffeinated Stable Repo",
     "overlays": [
         "patches/koipatch.js",
@@ -20,7 +20,8 @@
         "modules/creditmodule.js",
         "modules/donationtickermodule.js",
         "modules/chatdisplaymodule.js",
-        "modules/rotatormodule.js"
+        "modules/rotatormodule.js",
+        "modules/rainmodule.js"
     ],
     "required": [
         {
@@ -86,6 +87,10 @@
         {
             "namespace": "casterlabs_rotator",
             "id": "text_rotator"
+        },
+        {
+            "namespace": "casterlabs_rain",
+            "id": "emoji_rain"
         }
     ]
 }
