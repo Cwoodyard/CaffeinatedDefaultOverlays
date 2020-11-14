@@ -83,7 +83,7 @@ const CAFFEINE = {
                 }
             });
 
-            this.loginWindow.loadURL("https://caffeinated.casterlabs.co/modules/caffeinelogin.html");
+            this.loginWindow.loadURL("https://caffeinated.casterlabs.co/caffeine/caffeinelogin.html");
         }
     },
 
