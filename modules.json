@@ -15,7 +15,6 @@
         "caffeine/caffeineintegrationmodule.js",
         "caffeine/caffeinebroadcastimagemodule.js",
         "caffeine/caffeinegamepickermodule.js",
-        "modules/streamstatsmodule.js",
         "modules/donationmodule.js",
         "modules/followermodule.js",
         "modules/infomodule.js",
@@ -93,10 +92,6 @@
         {
             "namespace": "casterlabs_credits",
             "id": "casterlabs_credits"
-        },
-        {
-            "namespace": "casterlabs_stream_stats",
-            "id": "stream_stats"
         },
         {
             "namespace": "casterlabs_chat_display",
