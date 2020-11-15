@@ -146,7 +146,7 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
                 border-radius: 50%;
                 object-fit: cover;
                 height: 22px;
-                width: 22px;
+                width: auto;
                 margin: 1px 5px;
                 vertical-align: bottom;
             }
@@ -207,6 +207,13 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
                 font-size: 20px;
                 margin-left: 10px;
                 margin-top: 5px;
+            }
+
+            .vcbadge {
+                padding-left: 3px;
+                transform: translateY(5px);
+                height: 20px;
+                width: auto;
             }
         </style>
         <div class="container verticalchatmodule">
@@ -305,14 +312,14 @@ class VerticalChatUtil {
         } else {
             element.innerText = event.upvotes;
 
-            if (event.upvotes >= 1) {
-                element.classList = "upvote-1";
-            } else if (event.upvotes >= 10) {
-                element.classList = "upvote-2";
+            if (event.upvotes >= 1000) {
+                element.classList = "upvote-4";
             } else if (event.upvotes >= 100) {
                 element.classList = "upvote-3";
-            } else if (event.upvotes >= 1000) {
-                element.classList = "upvote-4";
+            } else if (event.upvotes >= 10) {
+                element.classList = "upvote-2";
+            } else if (event.upvotes >= 1) {
+                element.classList = "upvote-1";
             }
         }
     }
@@ -334,6 +341,16 @@ class VerticalChatUtil {
         username.style = "color: " + event.sender.color + ";";
         username.appendChild(pfp);
         username.appendChild(document.createTextNode(event.sender.username));
+
+        event.sender.badges.forEach((badge) => {
+            let badgeIcon = document.createElement("img");
+
+            badgeIcon.src = badge;
+            badgeIcon.classList = "vcbadge";
+
+            username.appendChild(badgeIcon);
+        });
+
         username.appendChild(text);
 
         text.classList.add("vctext");
@@ -343,6 +360,7 @@ class VerticalChatUtil {
 
         div.classList.add("vcchatmessage");
         div.appendChild(username);
+
         div.appendChild(counter);
 
         if (event.image) {

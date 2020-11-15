@@ -24,7 +24,8 @@
         "modules/donationtickermodule.js",
         "modules/chatdisplaymodule.js",
         "modules/rotatormodule.js",
-        "modules/companionmodule.js"
+        "modules/companionmodule.js",
+        "modules/rainmodule.js"
     ],
     "simple": [
         {
@@ -74,6 +75,10 @@
         {
             "namespace": "casterlabs_rotator",
             "id": "text_rotator"
+        },
+        {
+            "namespace": "casterlabs_rain",
+            "id": "emoji_rain"
         }
     ],
     "required": [

@@ -17,11 +17,19 @@
                 width: 100%;
                 overflow: hidden;
                 text-shadow: 1.5px 1.5px rgba(0, 0, 0, 0.3);
+                overflow-wrap: break-word;
             }
 
             .right-align {
                 text-align: right;
                 padding-right: 15px;
+            }
+
+            .badge {
+                padding-left: .25em;
+                transform: translateY(.1em);
+                height: .85em;
+                width: auto;
             }
         </style>
         <title>Caffeinated Chat</title>
@@ -43,6 +51,8 @@
             overlay.changeFont("Poppins");
 
             overlay.on("config", (data) => {
+                console.debug(data);
+
                 if (config.chat_direction != data.chat_direction) {
                     document.getElementById("div").innerHTML = "";
                 }
@@ -56,6 +66,8 @@
 
             overlay.on("event", (event) => {
                 if (config) {
+                    console.debug(event);
+
                     let div = document.createElement("div");
                     let msg = document.createElement("span");
                     let user = document.createElement("span");
@@ -67,6 +79,16 @@
                     msg.textContent = " " + event.message + " ";
 
                     div.appendChild(user);
+
+                    event.sender.badges.forEach((badge) => {
+                        let badgeIcon = document.createElement("img");
+
+                        badgeIcon.src = badge;
+                        badgeIcon.classList = "badge";
+
+                        div.appendChild(badgeIcon);
+                    });
+
                     div.appendChild(msg);
 
                     switch (config.chat_animation) {
