@@ -7,15 +7,22 @@ MODULES.moduleClasses["casterlabs_follower"] = class {
         this.id = id;
     }
 
-    linkDisplay = {
-        path: "https://caffeinated.casterlabs.co/follower.html",
-        option: {
+    widgetDisplay = [
+        {
+            name: "Copy",
+            icon: "copy",
+            onclick(instance) {
+                putInClipboard("https://caffeinated.casterlabs.co/follower.html?id=" + instance.id);
+            }
+        },
+        {
             name: "Test",
+            icon: "dice",
             onclick(instance) {
                 koi.test("casterlabs", "follow");
             }
         }
-    };
+    ]
 
     getDataToStore() {
         let data = Object.assign({}, this.settings);

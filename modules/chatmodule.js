@@ -7,15 +7,22 @@ MODULES.moduleClasses["casterlabs_chat"] = class {
         this.id = id;
     }
 
-    linkDisplay = {
-        path: "https://caffeinated.casterlabs.co/chat.html",
-        option: {
+    widgetDisplay = [
+        {
+            name: "Copy",
+            icon: "copy",
+            onclick(instance) {
+                putInClipboard("https://caffeinated.casterlabs.co/chat.html?id=" + instance.id);
+            }
+        },
+        {
             name: "Test",
+            icon: "dice",
             onclick(instance) {
                 koi.test("casterlabs", "chat");
             }
         }
-    };
+    ]
 
     getDataToStore() {
         return this.settings;

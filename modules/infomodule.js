@@ -17,10 +17,17 @@ MODULES.moduleClasses["casterlabs_info"] = class {
         }
     }
 
-    linkDisplay = {
-        path: "https://caffeinated.casterlabs.co/info.html",
-        option: {
+    widgetDisplay = [
+        {
+            name: "Copy",
+            icon: "copy",
+            onclick(instance) {
+                putInClipboard("https://caffeinated.casterlabs.co/info.html?id=" + instance.id);
+            }
+        },
+        {
             name: "Reset",
+            icon: "trash",
             onclick(instance) {
                 instance.event = null;
                 instance.text = "";
@@ -28,7 +35,7 @@ MODULES.moduleClasses["casterlabs_info"] = class {
                 MODULES.saveToStore(instance);
             }
         }
-    };
+    ]
 
     getDataToStore() {
         let data = Object.assign({}, this.settings);

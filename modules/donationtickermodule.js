@@ -8,16 +8,23 @@ MODULES.moduleClasses["casterlabs_donation_ticker"] = class {
         this.raised = 0;
     }
 
-    linkDisplay = {
-        path: "https://caffeinated.casterlabs.co/donationticker.html",
-        option: {
+    widgetDisplay = [
+        {
+            name: "Copy",
+            icon: "copy",
+            onclick(instance) {
+                putInClipboard("https://caffeinated.casterlabs.co/donationticker.html?id=" + instance.id);
+            }
+        },
+        {
             name: "Reset",
+            icon: "trash",
             onclick(instance) {
                 instance.raised = 0;
                 instance.update();
             }
         }
-    };
+    ]
 
     getDataToStore() {
         return this.settings;

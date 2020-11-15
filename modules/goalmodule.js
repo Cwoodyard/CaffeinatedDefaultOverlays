@@ -18,10 +18,17 @@ MODULES.moduleClasses["casterlabs_goal"] = class {
         this.id = id;
     }
 
-    linkDisplay = {
-        path: "https://caffeinated.casterlabs.co/goal.html",
-        option: {
+    widgetDisplay = [
+        {
+            name: "Copy",
+            icon: "copy",
+            onclick(instance) {
+                putInClipboard("https://caffeinated.casterlabs.co/goal.html?id=" + instance.id);
+            }
+        },
+        {
             name: "Reset",
+            icon: "trash",
             onclick(instance) {
                 instance.amount = 0;
 
@@ -36,7 +43,7 @@ MODULES.moduleClasses["casterlabs_goal"] = class {
                 MODULES.saveToStore(instance);
             }
         }
-    };
+    ]
 
     getDataToStore() {
         let data = Object.assign({}, this.settings);

@@ -8,15 +8,22 @@ MODULES.moduleClasses["casterlabs_rotator"] = class {
         this.scheduled = -1;
     }
 
-    linkDisplay = {
-        path: "https://caffeinated.casterlabs.co/rotator.html",
-        option: {
+    widgetDisplay = [
+        {
+            name: "Copy",
+            icon: "copy",
+            onclick(instance) {
+                putInClipboard("https://caffeinated.casterlabs.co/rotator.html?id=" + instance.id);
+            }
+        },
+        {
             name: "Test",
+            icon: "dice",
             onclick(instance) {
                 MODULES.emitIO(instance, "trigger");
             }
         }
-    };
+    ]
 
     getDataToStore() {
         return this.settings;
