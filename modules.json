@@ -9,7 +9,6 @@
     "version": "1.0.0",
     "name": "Caffeinated Beta Repo",
     "scripts": [
-        "patches/koipatch.js",
         "utils/kinoko.js",
         "utils/streamintegrationpolyfill.js",
         "twitch/twitchintegrationmodule.js",
