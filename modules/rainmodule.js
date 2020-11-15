@@ -7,17 +7,24 @@ MODULES.moduleClasses["casterlabs_rain"] = class {
         this.id = id;
     }
 
-    linkDisplay = {
-        path: "https://caffeinated.casterlabs.co/emoji.html",
-        option: {
+    widgetDisplay = [
+        {
+            name: "Copy",
+            icon: "copy",
+            onclick(instance) {
+                putInClipboard("https://caffeinated.casterlabs.co/emoji.html?id=" + instance.id);
+            }
+        },
+        {
             name: "Test",
+            icon: "dice",
             onclick(instance) {
                 MODULES.emitIO(instance, "event", {
                     message: "🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉"
                 });
             }
         }
-    };
+    ]
 
     getDataToStore() {
         return this.settings;
