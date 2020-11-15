@@ -3,7 +3,7 @@ MODULES.moduleClasses["casterlabs_stream_stats"] = class {
 
     constructor(id) {
         this.namespace = "casterlabs_stream_stats";
-        this.type = "page";
+        this.type = "application";
         this.id = id;
 
         koi.addEventListener("chat", (event) => {

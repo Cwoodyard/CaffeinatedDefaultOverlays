@@ -8,7 +8,7 @@
     ],
     "version": "1.0.0",
     "name": "Caffeinated Beta Repo",
-    "overlays": [
+    "scripts": [
         "patches/koipatch.js",
         "utils/kinoko.js",
         "utils/streamintegrationpolyfill.js",
@@ -28,23 +28,7 @@
         "modules/rotatormodule.js",
         "modules/companionmodule.js"
     ],
-    "required": [
-        {
-            "namespace": "casterlabs_caffeine_integration",
-            "id": "caffeine_integration"
-        },
-        {
-            "namespace": "caffeine_game_picker",
-            "id": "game_picker"
-        },
-        {
-            "namespace": "caffeine_broadcast_image",
-            "id": "broadcast_image"
-        },
-        {
-            "namespace": "casterlabs_stream_stats",
-            "id": "stream_stats"
-        },
+    "simple": [
         {
             "namespace": "casterlabs_companion",
             "id": "casterlabs_companion"
@@ -86,20 +70,38 @@
             "id": "follower_goal"
         },
         {
-            "namespace": "casterlabs_credits",
-            "id": "casterlabs_credits"
-        },
-        {
             "namespace": "casterlabs_donation_ticker",
             "id": "donation_ticker"
         },
         {
-            "namespace": "casterlabs_chat_display",
-            "id": "chat_display"
-        },
-        {
             "namespace": "casterlabs_rotator",
             "id": "text_rotator"
+        }
+    ],
+    "required": [
+        {
+            "namespace": "casterlabs_caffeine_integration",
+            "id": "caffeine_integration"
+        },
+        {
+            "namespace": "caffeine_game_picker",
+            "id": "game_picker"
+        },
+        {
+            "namespace": "caffeine_broadcast_image",
+            "id": "broadcast_image"
+        },
+        {
+            "namespace": "casterlabs_credits",
+            "id": "casterlabs_credits"
+        },
+        {
+            "namespace": "casterlabs_stream_stats",
+            "id": "stream_stats"
+        },
+        {
+            "namespace": "casterlabs_chat_display",
+            "id": "chat_display"
         }
     ]
 }
