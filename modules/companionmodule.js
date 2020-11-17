@@ -99,13 +99,7 @@ MODULES.moduleClasses["casterlabs_companion"] = class {
             this.sendEvent("join", viewer, true);
         });
 
-        let messages = Object.values(this.messageHistory);
-
-        messages.sort((a, b) => {
-            return (a.timestamp < b.timestamp) ? 1 : -1;
-        });
-
-        this.sendEvent("message_history", messages, true);
+        this.sendEvent("message_history", Object.values(this.messageHistory), true);
     }
 
     sendEvent(type, event, isCatchup = false) {
