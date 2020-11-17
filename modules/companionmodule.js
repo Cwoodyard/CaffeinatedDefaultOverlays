@@ -151,6 +151,9 @@ MODULES.moduleClasses["casterlabs_companion"] = class {
             MODULES.saveToStore(this);
         }
 
+        document.querySelector("#casterlabs_companion_" + this.id).querySelector("[name='Open on your device']").setAttribute("readonly", "");
+
+
         this.setLinkText();
         this.connect();
     }
