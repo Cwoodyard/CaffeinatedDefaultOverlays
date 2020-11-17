@@ -102,7 +102,7 @@ MODULES.moduleClasses["casterlabs_companion"] = class {
         let messages = Object.values(this.messageHistory);
 
         messages.sort((a, b) => {
-            return (a.timestamp > b.timestamp) ? 1 : -1;
+            return (a.timestamp < b.timestamp) ? 1 : -1;
         });
 
         this.sendEvent("message_history", messages, true);
