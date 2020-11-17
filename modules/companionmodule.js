@@ -64,6 +64,7 @@ MODULES.moduleClasses["casterlabs_companion"] = class {
 
         koi.addEventListener("stream_status", (event) => {
             this.sendEvent("stream_status", event);
+            this.streamStatus = event;
         });
 
         koi.addEventListener("user_update", (event) => {
@@ -88,18 +89,34 @@ MODULES.moduleClasses["casterlabs_companion"] = class {
     }
 
     sendAll() {
-        this.sendEvent("user_update", CAFFEINATED.userdata);
+        this.sendEvent("viewcount", STREAM_INTEGRATION.viewerCount, true);
+        this.sendEvent("viewers", STREAM_INTEGRATION.viewers, true);
+        this.sendEvent("user_update", CAFFEINATED.userdata, true);
+        this.sendEvent("stream_status", this.streamStatus, true);
+
+        // Send join messages
+        Object.values(STREAM_INTEGRATION.viewers).forEach((viewer) => {
+            this.sendEvent("join", viewer, true);
+        });
 
         let messages = Object.values(this.messageHistory);
 
         messages.sort((a, b) => {
-            return (a.timestamp < b.timestamp) ? 1 : -1;
+            return (a.timestamp > b.timestamp) ? 1 : -1;
         });
 
-        this.sendEvent("messagehistory", messages);
+        this.sendEvent("message_history", messages, true);
     }
 
-    sendEvent(type, data) {
+    sendEvent(type, event, isCatchup = false) {
+        this.send("event", {
+            type: type,
+            event: event,
+            is_catchup: isCatchup
+        });
+    }
+
+    send(type, data) {
         this.kinoko.send({
             type: type,
             data: data
