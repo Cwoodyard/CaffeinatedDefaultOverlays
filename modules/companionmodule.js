@@ -31,7 +31,7 @@ MODULES.moduleClasses["casterlabs_companion"] = class {
             }
 
             event.upvotes = 0;
-            event.timestamp = performance.now;
+            event.timestamp = performance.now();
 
             this.messageHistory[event.id] = event;
             this.sendEvent("chat", event);
@@ -43,7 +43,7 @@ MODULES.moduleClasses["casterlabs_companion"] = class {
             }
 
             event.upvotes = 0;
-            event.timestamp = performance.now;
+            event.timestamp = performance.now();
 
             this.messageHistory[event.id] = event;
             this.sendEvent("donation", event);
