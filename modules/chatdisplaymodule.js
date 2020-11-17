@@ -142,6 +142,15 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
                 cursor: default;
             }
 
+            .vcprofile {
+                border-radius: 50%;
+                object-fit: cover;
+                height: 22px;
+                width: 22px;
+                margin: 1px 5px;
+                vertical-align: bottom;
+            }
+
             .vcimage {
                 border-radius: 50%;
                 object-fit: cover;
@@ -335,7 +344,7 @@ class VerticalChatUtil {
         let counter = document.createElement("sup");
 
         pfp.src = event.sender.image_link;
-        pfp.classList.add("vcimage");
+        pfp.classList.add("vcprofile");
 
         username.classList.add("vcusername");
         username.style = "color: " + event.sender.color + ";";
@@ -416,7 +425,7 @@ class VerticalChatUtil {
         let msg = document.createElement("li");
 
         pfp.src = profilePic;
-        pfp.classList.add("vcimage");
+        pfp.classList.add("vcprofile");
 
         username.classList.add("vcusername");
         username.style = "color: " + color + ";";
