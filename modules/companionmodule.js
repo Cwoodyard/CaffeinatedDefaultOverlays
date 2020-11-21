@@ -90,7 +90,7 @@ MODULES.moduleClasses["casterlabs_companion"] = class {
 
     sendAll() {
         this.sendEvent("viewcount", STREAM_INTEGRATION.viewerCount, true);
-        this.sendEvent("viewers", STREAM_INTEGRATION.viewers, true);
+        this.sendEvent("viewers", Object.values(STREAM_INTEGRATION.viewers), true);
         this.sendEvent("user_update", CAFFEINATED.userdata, true);
         this.sendEvent("stream_status", this.streamStatus, true);
 
