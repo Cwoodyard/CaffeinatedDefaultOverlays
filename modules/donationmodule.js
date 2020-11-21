@@ -76,7 +76,7 @@ MODULES.moduleClasses["casterlabs_donation"] = class {
         text_color: "#FFFFFF",
         volume: 1,
         text_to_speech_voice: ["Brian", "Russell", "Nicole", "Amy", "Salli", "Joanna", "Matthew", "Ivy", "Joey"],
-        audio: ["Custom Audio", "Text To Speech", "None"],
+        audio: ["Custom Audio", "Text To Speech", "Custom Audio & Text To Speech", "None"],
         image: ["Custom Image", "Donation Image", "None"],
         audio_file: "",
         image_file: ""
