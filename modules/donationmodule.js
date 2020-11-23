@@ -67,8 +67,7 @@ MODULES.moduleClasses["casterlabs_donation"] = class {
 
     settingsDisplay = {
         font: "font",
-        font_size: "number",
-        text_color: "color",
+        text: "rich",
         volume: "range",
         text_to_speech_voice: "select",
         audio: "select",
@@ -79,8 +78,7 @@ MODULES.moduleClasses["casterlabs_donation"] = class {
 
     defaultSettings = {
         font: "Poppins",
-        font_size: "16",
-        text_color: "#FFFFFF",
+        text: "<p>%username% just donated %amount%!</p>",
         volume: 1,
         text_to_speech_voice: ["Brian", "Russell", "Nicole", "Amy", "Salli", "Joanna", "Matthew", "Ivy", "Joey"],
         audio: ["Custom Audio", "Text To Speech", "None"],

@@ -67,8 +67,7 @@ MODULES.moduleClasses["casterlabs_follower"] = class {
 
     settingsDisplay = {
         font: "font",
-        font_size: "number",
-        text_color: "color",
+        text: "rich",
         volume: "range",
         enable_audio: "checkbox",
         use_custom_image: "checkbox",
@@ -78,8 +77,7 @@ MODULES.moduleClasses["casterlabs_follower"] = class {
 
     defaultSettings = {
         font: "Poppins",
-        font_size: "16",
-        text_color: "#FFFFFF",
+        text: "<p>%username% just followed!</p>",
         volume: 1,
         enable_audio: true,
         use_custom_image: true,
