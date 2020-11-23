@@ -48,9 +48,6 @@
             <img src="" id="image" />
             <video src="" id="video"></video>
             <div class="text-container">
-                <span id="user"></span>
-                <br />
-                <span id="text"></span>
             </div>
         </h1>
     </body>
@@ -61,9 +58,8 @@
             const DISPLAY_TIME = 10 * 1000;
             const FADE_TIME = 1000;
             const video = document.querySelector("#video");
-            const user = document.querySelector("#user");
             const img = document.querySelector("#image");
-            const text = document.querySelector("#text");
+            const text = document.querySelector(".text-container");
             let config = null;
             let files = {};
             let audio = {};
@@ -129,10 +125,7 @@
                     case "None": break;
                 }
 
-                text.innerText = event.message;
-
-                user.innerText = event.sender.username;
-                user.style = "color: " + event.sender.color + ";";
+                text.innerHTML = config.text.replace("%username%", event.sender.username).replace("%amount%", event.currency_info.formatted);
 
                 switch (config.audio) {
                     case "Custom Audio": playAudio(); break;

@@ -52,8 +52,6 @@
             <img src="" id="image" />
             <video src="" id="video"></video>
             <div class="text-container">
-                <span id="user"></span>
-                <span id="text">followed</span>
             </div>
         </h1>
     </body>
@@ -64,9 +62,8 @@
             const DISPLAY_TIME = 10 * 1000;
             const FADE_TIME = 1000;
             const video = document.querySelector("#video");
-            const user = document.querySelector("#user");
             const img = document.querySelector("#image");
-            const text = document.querySelector("#text");
+            const text = document.querySelector(".text-container");
             let config = null;
             let files = {};
             let audio = {};
@@ -77,10 +74,8 @@
             overlay.on("config", (data) => {
                 config = data;
 
-                overlay.changeFont(config.font);
-
                 audio.volume = config.volume;
-                text.style = "color: " + config.text_color + "; font-size: " + config.font_size + "px;";
+                text.style = "font-size: " + config.font_size + "px;";
             });
 
             overlay.on("audio_file", (data) => {
@@ -123,8 +118,7 @@
                     img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
                 }
 
-                user.innerText = event.follower.username;
-                user.style = "color: " + event.follower.color + ";";
+                text.innerHTML = config.text.replace("%username%", event.sender.username);
 
                 if (config.enable_audio) {
                     playAudio();
