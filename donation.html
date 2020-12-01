@@ -128,8 +128,21 @@
                 text.innerHTML = config.text.replace("%username%", event.sender.username).replace("%amount%", event.currency_info.formatted);
 
                 switch (config.audio) {
-                    case "Custom Audio": playAudio(); break;
-                    case "Text To Speech": playTTS(event.message); break;
+                    case "Custom Audio": {
+                        playAudio();
+                        break;
+                    }
+
+                    case "Custom Audio & Text To Speech": {
+                        playAudio().then(() => playTTS(event.message));
+                        break;
+                    }
+
+                    case "Text To Speech": {
+                        playTTS(event.message);
+                        break;
+                    }
+
                     case "None": break;
                 }
 
@@ -170,14 +183,18 @@
             }
 
             function playAudio() {
-                try {
-                    audio = new Audio(files.audio_file);
+                return new Promise((resolve) => {
+                    try {
+                        audio = new Audio(files.audio_file);
 
-                    audio.volume = config.volume;
-                    audio.play();
-                } catch (e) {
-                    audio = {};
-                }
+                        audio.addEventListener("ended", resolve);
+
+                        audio.volume = config.volume;
+                        audio.play();
+                    } catch (e) {
+                        audio = {};
+                    }
+                });
             }
 
             function sleep(ms) {
