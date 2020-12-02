@@ -363,7 +363,12 @@ class VerticalChatUtil {
         username.appendChild(text);
 
         text.classList.add("vctext");
-        text.innerText = event.message;
+
+        for (const [name, link] of Object.entries(event.emotes)) {
+            event.message = event.message.split(name).join(`<img class="vcimage" title="${name}" src="${link}" />`);
+        }
+
+        text.innerHTML = event.message;
 
         counter.setAttribute("vc_message_id", event.id);
 

@@ -5,7 +5,9 @@
         <meta charset="utf-8" />
         <style>
             img {
-                height: 20px;
+                height: 1em;
+                width: auto;
+                vertical-align: middle;
             }
 
             body {
@@ -27,7 +29,7 @@
 
             .badge {
                 padding-left: .25em;
-                transform: translateY(.1em);
+                vertical-align: middle;
                 height: .85em;
                 width: auto;
             }
@@ -72,11 +74,15 @@
                     let msg = document.createElement("span");
                     let user = document.createElement("span");
 
-                    user.textContent = event.sender.username;
+                    user.innerText = event.sender.username;
                     user.classList = "username";
                     user.style = "color: " + event.sender.color + ";";
 
-                    msg.textContent = " " + event.message + " ";
+                    for (const [name, link] of Object.entries(event.emotes)) {
+                        event.message = event.message.split(name).join(`<img title="${name}" src="${link}" />`);
+                    }
+
+                    msg.innerHTML = " " + event.message + " ";
 
                     div.appendChild(user);
 
