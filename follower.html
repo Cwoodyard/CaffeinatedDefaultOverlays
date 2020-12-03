@@ -118,7 +118,7 @@
                     img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
                 }
 
-                text.innerHTML = config.text.replace("%username%", event.sender.username);
+                text.innerHTML = config.text.replace("%username%", event.follower.username);
 
                 if (config.enable_audio) {
                     playAudio();
