@@ -55,7 +55,7 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
 
     init() {
         this.page.innerHTML = `
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@550&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap" rel="stylesheet" />
         <style>
             .buttons {
                 position: fixed;
@@ -147,7 +147,7 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
                 object-fit: cover;
                 height: 22px;
                 width: 22px;
-                margin: 1px 5px;
+                margin: 1px 3px;
                 vertical-align: bottom;
             }
 
@@ -156,7 +156,7 @@ MODULES.moduleClasses["casterlabs_chat_display"] = class {
                 object-fit: cover;
                 height: 22px;
                 width: auto;
-                margin: 1px 5px;
+                margin: 1px;
                 vertical-align: bottom;
             }
 
@@ -271,6 +271,13 @@ class VerticalChatUtil {
         });
     }
 
+    escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+    }
+
     timeoutCaffeine(user) {
         this.timeoutTarget = user;
 
@@ -345,6 +352,9 @@ class VerticalChatUtil {
 
         pfp.src = event.sender.image_link;
         pfp.classList.add("vcprofile");
+        pfp.addEventListener("click", () => {
+            openLink(event.sender.link);
+        });
 
         username.classList.add("vcusername");
         username.style = "color: " + event.sender.color + ";";
@@ -363,6 +373,8 @@ class VerticalChatUtil {
         username.appendChild(text);
 
         text.classList.add("vctext");
+
+        event.message = this.escapeHtml(event.message);
 
         for (const [name, link] of Object.entries(event.emotes)) {
             event.message = event.message.split(name).join(`<img class="vcimage" title="${name}" src="${link}" />`);

@@ -125,7 +125,7 @@
                     case "None": break;
                 }
 
-                text.innerHTML = config.text.replace("%username%", event.sender.username).replace("%amount%", event.currency_info.formatted);
+                text.innerHTML = config.text.replace("%username%", event.sender.username).replace("%amount%", event.currency_info.formatted).replace("%message%", escapeHtml(event.message));
 
                 switch (config.audio) {
                     case "Custom Audio": {
