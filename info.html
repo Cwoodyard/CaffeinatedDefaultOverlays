@@ -8,8 +8,17 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script>
         <script src="overlayutil.js"></script>
         <style>
-            body {
+            #text {
                 text-shadow: 1.5px 1.5px rgba(0, 0, 0, 0.3);
+                color: white;
+                white-space: pre;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+
+            p {
+                margin: 0;
             }
         </style>
     </head>
@@ -22,21 +31,29 @@
         <script>
             const overlay = new OverlayUtil("casterlabs_info");
             let config = null;
+            let event = {
+                username: "",
+                amount: ""
+            };
 
             overlay.on("config", (data) => {
                 config = data;
 
                 overlay.changeFont(config.font);
 
-                document.querySelector("#text").style = "color: " + config.text_color + "; font-size: " + config.font_size + "px;";
+                update();
             });
 
-            overlay.on("event", (text) => {
+            overlay.on("event", (data) => {
                 if (config) {
-                    console.log(text)
-                    document.querySelector("#text").innerText = text;
+                    event = data;
+                    update();
                 }
             });
+
+            function update() {
+                document.querySelector("#text").innerHTML = config.text.replace("%username%", event.username).replace("%amount%", event.amount);
+            }
 
         </script>
     </footer>

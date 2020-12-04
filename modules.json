@@ -33,16 +33,12 @@
             "id": "casterlabs_companion"
         },
         {
-            "namespace": "casterlabs_donation",
-            "id": "donation"
-        },
-        {
-            "namespace": "casterlabs_follower",
-            "id": "follower"
-        },
-        {
             "namespace": "casterlabs_chat",
             "id": "chat"
+        },
+        {
+            "namespace": "casterlabs_donation",
+            "id": "donation"
         },
         {
             "namespace": "casterlabs_info",
@@ -53,8 +49,16 @@
             "id": "recent_donation"
         },
         {
-            "namespace": "casterlabs_info",
-            "id": "view_counter"
+            "namespace": "casterlabs_donation_ticker",
+            "id": "donation_ticker"
+        },
+        {
+            "namespace": "casterlabs_rain",
+            "id": "emoji_rain"
+        },
+        {
+            "namespace": "casterlabs_follower",
+            "id": "follower"
         },
         {
             "namespace": "casterlabs_info",
@@ -69,16 +73,8 @@
             "id": "follower_goal"
         },
         {
-            "namespace": "casterlabs_donation_ticker",
-            "id": "donation_ticker"
-        },
-        {
             "namespace": "casterlabs_rotator",
             "id": "text_rotator"
-        },
-        {
-            "namespace": "casterlabs_rain",
-            "id": "emoji_rain"
         }
     ],
     "required": [

@@ -6,14 +6,8 @@ MODULES.moduleClasses["casterlabs_info"] = class {
         this.type = "overlay settings";
         this.id = id;
 
-        if (this.id.includes("donation")) {
-            this.settingsDisplay.currency = "select";
-
-            if (VERSION.includes("0.5")) {
-                this.defaultSettings.currency = ["Selected", "Default"];
-            } else {
-                this.defaultSettings.currency = ["USD", "Default"];
-            }
+        if (!this.id.includes("donation")) {
+            this.settingsDisplay.text = this.settingsDisplay.text.replace("%amount% ", "");
         }
     }
 
@@ -29,9 +23,11 @@ MODULES.moduleClasses["casterlabs_info"] = class {
             name: "Reset",
             icon: "trash",
             onclick(instance) {
-                instance.event = null;
-                instance.text = "";
-                MODULES.emitIO(instance, "event", "");
+                instance.event = {
+                    username: "",
+                    amount: ""
+                };
+                MODULES.emitIO(instance, "event", instance.event);
                 MODULES.saveToStore(instance);
             }
         }
@@ -41,64 +37,46 @@ MODULES.moduleClasses["casterlabs_info"] = class {
         let data = Object.assign({}, this.settings);
 
         data.event = this.event;
-        data.text = this.text;
 
         return data;
     }
 
     onConnection(socket) {
         MODULES.emitIO(this, "config", this.settings, socket);
-        MODULES.emitIO(this, "event", this.text, socket);
+        MODULES.emitIO(this, "event", this.event, socket);
     }
 
     init() {
         const instance = this;
 
-        this.text = this.settings.text;
         this.event = this.settings.event;
 
-        if (!this.text && this.event) {
-            this.event = null;
+        if (!this.event) {
+            this.event = {
+                username: "",
+                amount: ""
+            };
         }
 
-        if (this.id.includes("view")) {
-            STREAM_INTEGRATION.addEventListener("viewcount", (count) => {
-                instance.text = count;
+        if (this.id.includes("follow")) {
+            koi.addEventListener("follow", (event) => {
+                instance.event = {
+                    username: event.follower.username,
+                    amount: ""
+                };
 
-                MODULES.emitIO(this, "event", instance.text);
+                MODULES.emitIO(this, "event", instance.event);
                 MODULES.saveToStore(instance);
             });
         } else {
-            if (this.id.includes("follow")) {
-                koi.addEventListener("follow", (event) => {
-                    instance.event = event;
-                    instance.text = event.follower.username;
+            koi.addEventListener("donation", (event) => {
+                if (!instance.event || instance.id.includes("recent") || (instance.event.usd_equivalent <= event.usd_equivalent)) {
+                    instance.event = {
+                        username: event.sender.username,
+                        amount: event.currency_info.formatted
+                    };
 
-                    MODULES.emitIO(this, "event", instance.text);
-                    MODULES.saveToStore(instance);
-                });
-            } else {
-                koi.addEventListener("donation", (event) => {
-                    if (!instance.event || instance.id.includes("recent") || (instance.event.usd_equivalent <= event.usd_equivalent)) {
-                        instance.event = event;
-
-                        if (instance.settings.currency == "Default") {
-                            instance.text = event.sender.username + " " + event.formatted;
-                        } else {
-                            instance.text = event.sender.username + " " + event.currency_info.formatted;
-                        }
-
-                        MODULES.emitIO(this, "event", instance.text);
-                        MODULES.saveToStore(instance);
-                    }
-                });
-            }
-
-            koi.addEventListener("userupdate", (event) => {
-                if ((instance.event) && (instance.event.streamer.uuid != event.streamer.uuid)) {
-                    instance.event = null;
-                    instance.text = "";
-                    MODULES.emitIO(instance, "event", "");
+                    MODULES.emitIO(this, "event", instance.event);
                     MODULES.saveToStore(instance);
                 }
             });
@@ -111,16 +89,12 @@ MODULES.moduleClasses["casterlabs_info"] = class {
 
     settingsDisplay = {
         font: "font",
-        font_size: "number",
-        // currency: "select",
-        text_color: "color"
+        text: "rich"
     };
 
     defaultSettings = {
         font: "Poppins",
-        font_size: "16",
-        // currency: ["default", "usd"],
-        text_color: "#FFFFFF"
+        text: "<p>%amount% %username%</p>"
     };
 
 };
