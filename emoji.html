@@ -47,7 +47,13 @@
                 let message = event.message.match(EMOJI_REGEX);
 
                 if (event.emotes) {
-                    Object.values(event.emotes).forEach(create);
+                    for (const [pattern, link] of Object.entries(event.emotes)) {
+                        let occurs = event.message.split(pattern).length - 1;
+
+                        for (let i = 0; i != occurs; i++) {
+                            create(link);
+                        }
+                    }
                 }
 
                 if (message) {
