@@ -46,7 +46,29 @@
             overlay.on("event", (event) => {
                 let message = event.message.match(EMOJI_REGEX);
 
-                message.forEach(create);
+                if (event.emotes) {
+                    for (const [pattern, link] of Object.entries(event.emotes)) {
+                        let occurs = event.message.split(pattern).length - 1;
+
+                        for (let i = 0; i != occurs; i++) {
+                            create(link);
+                        }
+                    }
+                }
+
+                if (event.custom_emotes) {
+                    for (const [pattern, link] of Object.entries(event.custom_emotes)) {
+                        let occurs = event.message.toLowerCase().split(pattern.toLowerCase()).length - 1;
+
+                        for (let i = 0; i != occurs; i++) {
+                            create(link);
+                        }
+                    }
+                }
+
+                if (message) {
+                    message.forEach(create);
+                }
             });
 
             function create(c) {
@@ -96,7 +118,16 @@
 
                         ctx.fillStyle = "white";
                         ctx.globalAlpha = emoji.opacity;
-                        ctx.fillText(emoji.text, emoji.x, emoji.y);
+
+                        if (emoji.text.startsWith("http")) {
+                            let image = new Image();
+
+                            image.src = emoji.text;
+
+                            ctx.drawImage(image, emoji.x, emoji.y, size, size);
+                        } else {
+                            ctx.fillText(emoji.text, emoji.x, emoji.y);
+                        }
                     });
                 }
 
