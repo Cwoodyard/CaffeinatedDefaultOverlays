@@ -56,6 +56,16 @@
                     }
                 }
 
+                if (event.custom_emotes) {
+                    for (const [pattern, link] of Object.entries(event.custom_emotes)) {
+                        let occurs = event.message.toLowerCase().split(pattern.toLowerCase()).length - 1;
+
+                        for (let i = 0; i != occurs; i++) {
+                            create(link);
+                        }
+                    }
+                }
+
                 if (message) {
                     message.forEach(create);
                 }
