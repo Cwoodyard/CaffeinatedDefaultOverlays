@@ -7,7 +7,7 @@ MODULES.moduleClasses["casterlabs_info"] = class {
         this.id = id;
 
         if (!this.id.includes("donation")) {
-            this.settingsDisplay.text = this.settingsDisplay.text.replace("%amount% ", "");
+            this.settingsDisplay.format = this.settingsDisplay.format.replace("%amount% ", "");
         }
     }
 

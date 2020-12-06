@@ -23,7 +23,6 @@
         "modules/creditmodule.js",
         "modules/donationtickermodule.js",
         "modules/chatdisplaymodule.js",
-        "modules/rotatormodule.js",
         "modules/companionmodule.js",
         "modules/rainmodule.js",
         "modules/nowplayingmodule.js"
