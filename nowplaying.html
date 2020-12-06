@@ -143,12 +143,15 @@
 
                     artistElement.innerText = event.artist;
 
-                    if (config.background == "Blur") {
+                    if (config.background == "Clear") {
+                        backgroundElement.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
+                        cardElement.style = "background-color: rgba(0, 0, 0, 0)";
+                    } else if (config.background == "Blur") {
                         backgroundElement.src = event.image;
-                        backgroundElement.style = "";
+                        cardElement.style = "";
                     } else {
                         backgroundElement.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
-                        backgroundElement.style = await getBrightness(event.image);
+                        cardElement.style = await getBrightness(event.image);
                     }
 
                     cardElement.classList = config.image_style.toLowerCase() + "-image";

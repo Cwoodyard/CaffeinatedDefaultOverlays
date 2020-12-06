@@ -151,7 +151,7 @@ MODULES.moduleClasses["casterlabs_now_playing"] = class {
 
             openLink(link + this.uuid);
         },
-        background: ["Blur", "Solid"],
+        background: ["Blur", "Clear", "Solid"],
         image_style: ["Left", "Right", "None"]
     };
 
