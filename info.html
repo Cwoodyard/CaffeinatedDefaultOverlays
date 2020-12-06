@@ -52,7 +52,7 @@
             });
 
             function update() {
-                document.querySelector("#text").innerHTML = config.text.replace("%username%", event.username).replace("%amount%", event.amount);
+                document.querySelector("#text").innerHTML = config.format.replace("%username%", event.username).replace("%amount%", event.amount);
             }
 
         </script>

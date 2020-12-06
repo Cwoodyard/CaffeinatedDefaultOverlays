@@ -89,12 +89,12 @@ MODULES.moduleClasses["casterlabs_info"] = class {
 
     settingsDisplay = {
         font: "font",
-        text: "rich"
+        format: "rich"
     };
 
     defaultSettings = {
         font: "Poppins",
-        text: "<p>%amount% %username%</p>"
+        format: "<p>%amount% %username%</p>"
     };
 
 };

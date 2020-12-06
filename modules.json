@@ -25,7 +25,8 @@
         "modules/chatdisplaymodule.js",
         "modules/rotatormodule.js",
         "modules/companionmodule.js",
-        "modules/rainmodule.js"
+        "modules/rainmodule.js",
+        "modules/nowplayingmodule.js"
     ],
     "simple": [
         {
@@ -41,12 +42,16 @@
             "id": "donation"
         },
         {
-            "namespace": "casterlabs_info",
-            "id": "top_donation"
+            "namespace": "casterlabs_goal",
+            "id": "donation_goal"
         },
         {
             "namespace": "casterlabs_info",
             "id": "recent_donation"
+        },
+        {
+            "namespace": "casterlabs_info",
+            "id": "top_donation"
         },
         {
             "namespace": "casterlabs_donation_ticker",
@@ -61,20 +66,16 @@
             "id": "follower"
         },
         {
-            "namespace": "casterlabs_info",
-            "id": "recent_follow"
-        },
-        {
-            "namespace": "casterlabs_goal",
-            "id": "donation_goal"
-        },
-        {
             "namespace": "casterlabs_goal",
             "id": "follower_goal"
         },
         {
-            "namespace": "casterlabs_rotator",
-            "id": "text_rotator"
+            "namespace": "casterlabs_info",
+            "id": "recent_follow"
+        },
+        {
+            "namespace": "casterlabs_now_playing",
+            "id": "now_playing"
         }
     ],
     "required": [

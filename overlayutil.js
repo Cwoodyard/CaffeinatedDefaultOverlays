@@ -10,7 +10,10 @@ class OverlayUtil {
     constructor(namespace) {
         this.namespace = namespace + ":" + vars.id;
 
-        this.socket = io("http://localhost:8091", {
+        const port = vars.port ? vars.port : 8091;
+        const ip = vars.address ? vars.address : "http://localhost";
+
+        this.socket = io(ip + ":" + port, {
             reconnection: true,
             reconnectionDelay: 1000,
             reconnectionDelayMax: 1000,
