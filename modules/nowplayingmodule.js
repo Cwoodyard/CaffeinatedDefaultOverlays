@@ -17,7 +17,7 @@ MODULES.moduleClasses["casterlabs_now_playing"] = class {
                 if (!authResult.error) {
                     this.statusElement.innerText = "Logged in";
 
-                    this.settings.token = authResult.refresh_token;
+                    this.refreshToken = authResult.refresh_token;
                     this.accessToken = authResult.access_token;
 
                     MODULES.saveToStore(this);
@@ -96,7 +96,7 @@ MODULES.moduleClasses["casterlabs_now_playing"] = class {
                         }
                     })).json();
 
-                    this.statusElement.innerText = "Logged in as " + profile.display_name;
+                    this.statusElement.innerText = "Logged in as " + profile.display_name + " (Click to log out)";
                 }
 
                 MODULES.saveToStore(this);
@@ -147,9 +147,14 @@ MODULES.moduleClasses["casterlabs_now_playing"] = class {
 
     defaultSettings = {
         login: () => {
-            const link = "https://accounts.spotify.com/en/authorize?client_id=dff9da1136b0453983ff40e3e5e20397&response_type=code&scope=user-read-playback-state&redirect_uri=https:%2F%2Fcasterlabs.co%2Fauth%3Ftype%3Dspotify&state=";
+            if (this.refreshToken) {
+                this.refreshToken = null;
+                this.statusElement.innerText = "Login with Spotify";
+            } else {
+                const link = "https://accounts.spotify.com/en/authorize?client_id=dff9da1136b0453983ff40e3e5e20397&response_type=code&scope=user-read-playback-state&redirect_uri=https:%2F%2Fcasterlabs.co%2Fauth%3Ftype%3Dspotify&state=";
 
-            openLink(link + this.uuid);
+                openLink(link + this.uuid);
+            }
         },
         background: ["Blur", "Clear", "Solid"],
         image_style: ["Left", "Right", "None"]
