@@ -15,10 +15,9 @@ MODULES.moduleClasses["casterlabs_now_playing"] = class {
                 const authResult = await (await fetch("https://api.casterlabs.co/proxy/spotify/token?code=" + code)).json();
 
                 if (!authResult.error) {
-                    this.statusElement.innerText = "Logged in";
+                    this.statusElement.innerText = "Logging in";
 
                     this.refreshToken = authResult.refresh_token;
-                    this.accessToken = authResult.access_token;
 
                     MODULES.saveToStore(this);
                 } else {
@@ -61,8 +60,8 @@ MODULES.moduleClasses["casterlabs_now_playing"] = class {
 
         element.style = "overflow: hidden; background-color: rgb(30, 215, 96); margin-top: 15px;";
         element.innerHTML = `
-        <img src="https://developer.spotify.com/assets/branding-guidelines/icon4@2x.png" style="height: 3.5em; position: absolute; left: -5px;" />
-        <span style="padding-left: 1.75em; z-index: 2;" name="text">Login with Spotify</span>
+            <img src="https://developer.spotify.com/assets/branding-guidelines/icon4@2x.png" style="height: 3.5em; position: absolute; left: -5px;" />
+            <span style="padding-left: 1.75em; z-index: 2;" name="text">Login with Spotify</span>
         `;
 
         this.statusElement = element.querySelector("[name=text]");
@@ -82,7 +81,7 @@ MODULES.moduleClasses["casterlabs_now_playing"] = class {
                     this.refreshToken = null;
                     this.statusElement.innerText = "Login with Spotify";
                 } else {
-                    this.statusElement.innerText = "Logged in";
+                    this.statusElement.innerText = "Logging in";
 
                     this.accessToken = auth.access_token;
                     if (auth.refresh_token) {
@@ -149,6 +148,7 @@ MODULES.moduleClasses["casterlabs_now_playing"] = class {
         login: () => {
             if (this.refreshToken) {
                 this.refreshToken = null;
+                this.accessToken = null;
                 this.statusElement.innerText = "Login with Spotify";
             } else {
                 const link = "https://accounts.spotify.com/en/authorize?client_id=dff9da1136b0453983ff40e3e5e20397&response_type=code&scope=user-read-playback-state&redirect_uri=https:%2F%2Fcasterlabs.co%2Fauth%3Ftype%3Dspotify&state=";
