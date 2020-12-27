@@ -133,7 +133,7 @@ MODULES.moduleClasses["casterlabs_companion"] = class {
     }
 
     setLinkText() {
-        document.querySelector("#casterlabs_companion_casterlabs_companion").querySelector("[name='Open on your device']").value = "casterlabs.co/companion?key=" + this.uuid;
+        document.querySelector("#casterlabs_companion_casterlabs_companion").querySelector("[name='Open on your device']").value = "casterlabs.co/companion.html?key=" + this.uuid;
     }
 
     init() {
